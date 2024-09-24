@@ -2,11 +2,13 @@ package main
 
 import (
 	"embed"
+	"fmt"
 	"github.com/wailsapp/wails/v2"
+	"github.com/wailsapp/wails/v2/pkg/menu"
 	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
+	"github.com/wailsapp/wails/v2/pkg/options/linux"
 	"log"
 
-	"github.com/wailsapp/wails/v2/pkg/logger"
 	"github.com/wailsapp/wails/v2/pkg/options"
 	"github.com/wailsapp/wails/v2/pkg/options/mac"
 	"github.com/wailsapp/wails/v2/pkg/options/windows"
@@ -20,31 +22,41 @@ var assets embed.FS
 //go:embed build/appicon.png
 var icon []byte
 
+const (
+	appName = "测试APP"
+)
+
+var (
+	version = "0.0.0"
+)
+
 func main() {
 	app := NewApp()
+	appMenu := menu.NewMenu()
 
 	// 主应用程序由对 wails.Run() 的调用组成。 它接受描述应用程序窗口大小、窗口标题、要使用的资源等应用程序配置
 	// 完整说明：https://wails.io/zh-Hans/docs/reference/options/
 	err := wails.Run(&options.App{
-		Title:             "窗口标题",
-		Width:             1024,
-		Height:            768,
-		MinWidth:          1024,
-		MinHeight:         768,
-		MaxWidth:          1280,
-		MaxHeight:         800,
-		DisableResize:     false,
-		Fullscreen:        false,
+		Title:  appName,
+		Width:  1280,
+		Height: 768,
+		//MinWidth:          1024,
+		//MinHeight:         768,
+		//MaxWidth:          1280,
+		//MaxHeight:         800,
+		//DisableResize:     false,
+		//Fullscreen:        false,
 		Frameless:         false,
 		StartHidden:       false,
 		HideWindowOnClose: false,
-		BackgroundColour:  &options.RGBA{R: 255, G: 255, B: 255, A: 255},
+		BackgroundColour:  &options.RGBA{R: 255, G: 255, B: 255},
 		AssetServer: &assetserver.Options{
 			Assets: assets,
 		},
-		Menu:     nil,
-		Logger:   nil,
-		LogLevel: logger.DEBUG,
+		Menu:                     appMenu,
+		EnableDefaultContextMenu: true,
+		//Logger:                   nil,
+		//LogLevel:                 logger.DEBUG,
 		//OnStartup 此回调在前端创建之后调用，但在 index.html 加载之前调用。 它提供了应用程序上下文。
 		OnStartup: app.startup,
 		//在前端加载完毕 index.html 及其资源后调用此回调
@@ -58,32 +70,27 @@ func main() {
 		Bind: []interface{}{
 			app,
 		},
-		// Windows platform specific options
 		Windows: &windows.Options{
-			WebviewIsTransparent: false,
-			WindowIsTranslucent:  false,
-			DisableWindowIcon:    false,
-			// DisableFramelessWindowDecorations: false,
-			WebviewUserDataPath: "",
+			WebviewIsTransparent:              false,
+			WindowIsTranslucent:               false,
+			DisableFramelessWindowDecorations: false,
+		},
+		Linux: &linux.Options{
+			ProgramName:         appName,
+			Icon:                icon,
+			WebviewGpuPolicy:    linux.WebviewGpuPolicyOnDemand,
+			WindowIsTranslucent: true,
 		},
 		// Mac platform specific options
 		Mac: &mac.Options{
-			TitleBar: &mac.TitleBar{
-				TitlebarAppearsTransparent: true,
-				HideTitle:                  false,
-				HideTitleBar:               false,
-				FullSizeContent:            false,
-				UseToolbar:                 false,
-				HideToolbarSeparator:       true,
-			},
-			Appearance:           mac.NSAppearanceNameDarkAqua,
-			WebviewIsTransparent: true,
-			WindowIsTranslucent:  true,
+			TitleBar: mac.TitleBarHiddenInset(),
 			About: &mac.AboutInfo{
-				Title:   "app",
+				Title:   fmt.Sprintf("%s %s", appName, version),
 				Message: "",
 				Icon:    icon,
 			},
+			WebviewIsTransparent: false,
+			WindowIsTranslucent:  false,
 		},
 	})
 
