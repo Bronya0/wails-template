@@ -12,10 +12,10 @@
     "vue": "^3.5.8"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^2.3.4",
+    "@vitejs/plugin-vue": "^5.1.4",
     "naive-ui": "^2.39.0",
     "vfonts": "^0.0.3",
-    "vite": "^2.9.18"
+    "vite": "^5.4.7"
   },
   "keywords": [],
   "author": "bronya0"
