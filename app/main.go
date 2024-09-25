@@ -1,6 +1,7 @@
 package main
 
 import (
+	"app/backend/config"
 	"embed"
 	"fmt"
 	"github.com/wailsapp/wails/v2"
@@ -31,6 +32,7 @@ var (
 
 func main() {
 	app := NewApp()
+	AppConfig := &config.AppConfig{}
 
 	// 主应用程序由对 wails.Run() 的调用组成。 它接受描述应用程序窗口大小、窗口标题、要使用的资源等应用程序配置
 	// 完整说明：https://wails.io/zh-Hans/docs/reference/options/
@@ -65,6 +67,7 @@ func main() {
 		//指定向前端暴露哪些结构体方法
 		Bind: []interface{}{
 			app,
+			AppConfig,
 		},
 		Windows: &windows.Options{
 			WebviewIsTransparent:              false,

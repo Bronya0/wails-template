@@ -1,5 +1,7 @@
 <template>
   <n-config-provider :theme="theme">
+    <n-message-provider>
+
     <n-layout has-sider>
 
       <n-layout>
@@ -24,18 +26,19 @@
 
 
           <n-layout-content>
-
-            <n-tabs type="line" justify-content="space-evenly" animated v-model:value="activeTab">
-              <n-tab-pane v-for="tab in tabs" :key="tab.name" :name="tab.name">
+            <n-tabs type="card" animated :value="activeTab" @update:value="handleTabChange">
+              <n-tab-pane v-for="tab in tabs" :key="tab.name" :name="tab.name" :tab="tab.label">
                 <template #tab>
                   <n-space align="center">
                     <n-icon :component="tab.icon" />
-                    {{ tab.title }}
+                    {{ tab.label }}
                   </n-space>
                 </template>
-                {{ tab.content }}
+                <component :is="tab.component" />
               </n-tab-pane>
             </n-tabs>
+
+
 
           </n-layout-content>
         </n-layout>
@@ -45,67 +48,46 @@
       </n-layout>
 
     </n-layout>
+
+    </n-message-provider>
   </n-config-provider>
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
-import { NConfigProvider, NLayout, NLayoutSider, NLayoutHeader, NLayoutContent, NTabs, NTabPane } from 'naive-ui'
+import {ref, reactive, shallowRef, onMounted} from 'vue'
+import { NConfigProvider, NLayout, NLayoutSider, NLayoutHeader, NLayoutContent, NTabs, NTabPane, NMessageProvider} from 'naive-ui'
 import { HomeOutline, PersonOutline, SettingsOutline } from '@vicons/ionicons5'
-
 import { useOsTheme } from 'naive-ui'
 import SideMenu from './components/SideMenu.vue'
 import TopMenu from './components/TopMenu.vue'
 import Footer from './components/Footer.vue'
+import Settings from './components/Settings.vue'
+
+const activeTab = ref('settings')
 
 const osTheme = useOsTheme()
 const theme = ref(osTheme.value)
 
 const collapsed = ref(false)
-const activeTab = ref('tab1')
+
 const tabs = [
-  {
-    name: 'home',
-    title: 'Home',
-    content: 'Home content',
-    icon: HomeOutline
-  },
-  {
-    name: 'profile',
-    title: 'Profile',
-    content: 'Profile content',
-    icon: PersonOutline
-  },
-  {
-    name: 'settings',
-    title: 'Settings',
-    content: 'Settings content',
-    icon: SettingsOutline
-  }
+  { name: 'settings', label: '界面设置', icon: SettingsOutline, component: Settings},
 ]
 
+
 const handleMenuSelect = (key) => {
-  // Handle menu item selection
-  console.log('Selected menu item:', key)
+  activeTab.value = key
 }
 
-const handleClose = (name) => {
-  const index = tabs.findIndex(tab => tab.name === name)
-  if (index !== -1) {
-    tabs.splice(index, 1)
-  }
+const handleTabChange = (name) => {
+  activeTab.value = name
 }
 
+// onMounted(async () => {
+//   // 在应用启动时读取配置
+//   await window.go.main.App.LoadConfig()
+// })
 
-const handleAdd = () => {
-  const newTab = {
-    name: `tab${tabs.length + 1}`,
-    title: `New Tab ${tabs.length + 1}`,
-    content: `Content of New Tab ${tabs.length + 1}`
-  }
-  tabs.push(newTab)
-  activeTab.value = newTab.name
-}
 </script>
 
 <style>
@@ -119,5 +101,9 @@ html, body {
   padding: 0;
   height: 100%;
   overflow: hidden;
+}
+
+.n-layout-sider {
+  height: 100vh;
 }
 </style>
