@@ -4,7 +4,6 @@ import (
 	"embed"
 	"fmt"
 	"github.com/wailsapp/wails/v2"
-	"github.com/wailsapp/wails/v2/pkg/menu"
 	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
 	"github.com/wailsapp/wails/v2/pkg/options/linux"
 	"log"
@@ -32,7 +31,6 @@ var (
 
 func main() {
 	app := NewApp()
-	appMenu := menu.NewMenu()
 
 	// 主应用程序由对 wails.Run() 的调用组成。 它接受描述应用程序窗口大小、窗口标题、要使用的资源等应用程序配置
 	// 完整说明：https://wails.io/zh-Hans/docs/reference/options/
@@ -42,18 +40,16 @@ func main() {
 		Height: 768,
 		//MinWidth:          1024,
 		//MinHeight:         768,
-		//MaxWidth:          1280,
-		//MaxHeight:         800,
+		//MaxWidth:  1440,
+		//MaxHeight: 920,
 		//DisableResize:     false,
-		//Fullscreen:        false,
-		Frameless:         false,
-		StartHidden:       false,
-		HideWindowOnClose: false,
-		BackgroundColour:  &options.RGBA{R: 255, G: 255, B: 255},
+		//Frameless:         false, //无边框
+		//HideWindowOnClose: false,  //关闭时隐藏窗口
+		BackgroundColour: &options.RGBA{R: 250, G: 250, B: 252},
 		AssetServer: &assetserver.Options{
 			Assets: assets,
 		},
-		Menu:                     appMenu,
+		Menu:                     nil,
 		EnableDefaultContextMenu: true,
 		//Logger:                   nil,
 		//LogLevel:                 logger.DEBUG,
@@ -64,8 +60,8 @@ func main() {
 		//在前端被销毁之后，应用程序终止之前，调用此回调。 它提供了应用程序上下文。
 		OnBeforeClose: app.beforeClose,
 		//应用关闭前回调
-		OnShutdown:       app.shutdown,
-		WindowStartState: options.Normal,
+		OnShutdown: app.shutdown,
+		//WindowStartState: options.Normal,
 		//指定向前端暴露哪些结构体方法
 		Bind: []interface{}{
 			app,

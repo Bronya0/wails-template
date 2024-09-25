@@ -4,16 +4,16 @@
 
       <n-layout>
 
-        <n-layout-header bordered style="height: 64px; padding: 10px 20px; background-color: #f6f8fa">
+        <n-layout-header bordered style="height: 64px; padding: 10px 20px; background-color: #f2f2f2">
           <TopMenu @select="handleMenuSelect" />
         </n-layout-header>
-
+        
         <n-layout has-sider>
           <n-layout-sider
               bordered
               collapse-mode="width"
               :collapsed-width="64"
-              :width="200"
+              :width="138"
               :collapsed="collapsed"
               show-trigger
               @collapse="collapsed = true"
@@ -25,7 +25,7 @@
 
           <n-layout-content>
 
-            <n-tabs type="line" animated v-model:value="activeTab">
+            <n-tabs type="line" justify-content="space-evenly" animated v-model:value="activeTab">
               <n-tab-pane v-for="tab in tabs" :key="tab.name" :name="tab.name">
                 <template #tab>
                   <n-space align="center">
