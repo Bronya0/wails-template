@@ -24,11 +24,19 @@
 
 
           <n-layout-content>
-            <n-tabs type="card" animated v-model:value="activeTab" @close="handleClose" @add="handleAdd">
-              <n-tab-pane v-for="tab in tabs" :key="tab.name" :name="tab.name" :tab="tab.title" >
+
+            <n-tabs type="line" animated v-model:value="activeTab">
+              <n-tab-pane v-for="tab in tabs" :key="tab.name" :name="tab.name">
+                <template #tab>
+                  <n-space align="center">
+                    <n-icon :component="tab.icon" />
+                    {{ tab.title }}
+                  </n-space>
+                </template>
                 {{ tab.content }}
               </n-tab-pane>
             </n-tabs>
+
           </n-layout-content>
         </n-layout>
 
@@ -43,6 +51,8 @@
 <script setup>
 import { ref, reactive } from 'vue'
 import { NConfigProvider, NLayout, NLayoutSider, NLayoutHeader, NLayoutContent, NTabs, NTabPane } from 'naive-ui'
+import { HomeOutline, PersonOutline, SettingsOutline } from '@vicons/ionicons5'
+
 import { useOsTheme } from 'naive-ui'
 import SideMenu from './components/SideMenu.vue'
 import TopMenu from './components/TopMenu.vue'
@@ -53,10 +63,26 @@ const theme = ref(osTheme.value)
 
 const collapsed = ref(false)
 const activeTab = ref('tab1')
-const tabs = reactive([
-  { name: 'tab1', title: 'Tab 1', content: 'Content of Tab 1' },
-  { name: 'tab2', title: 'Tab 2', content: 'Content of Tab 2' }
-])
+const tabs = [
+  {
+    name: 'home',
+    title: 'Home',
+    content: 'Home content',
+    icon: HomeOutline
+  },
+  {
+    name: 'profile',
+    title: 'Profile',
+    content: 'Profile content',
+    icon: PersonOutline
+  },
+  {
+    name: 'settings',
+    title: 'Settings',
+    content: 'Settings content',
+    icon: SettingsOutline
+  }
+]
 
 const handleMenuSelect = (key) => {
   // Handle menu item selection
