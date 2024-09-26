@@ -74,6 +74,7 @@ import SideMenu from './components/SideMenu.vue'
 import TopMenu from './components/TopMenu.vue'
 import Footer from './components/Footer.vue'
 import Settings from './components/Settings.vue'
+import HelloWorld from './components/HelloWorld.vue'
 
 const activeTab = ref('settings')
 const activeMenu = ref(null)
@@ -88,6 +89,7 @@ const menuOptions = [
     key: 'shouye',
     icon: () => h(HomeOutline),
     tabs: [
+      {name: 'hello world',key: 'hello', icon: HomeOutline, component: HelloWorld},
     ]
   },
   {
