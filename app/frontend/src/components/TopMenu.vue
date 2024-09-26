@@ -1,40 +1,48 @@
 <template>
   <div class="top-menu">
     <div class="left-section">
-      <n-avatar size="small" :src="logo" />
+      <n-avatar size="small" :src="logo"/>
       <h1 class="title">测试APP</h1>
     </div>
     <div class="right-section">
-      <n-menu mode="horizontal" :options="menuOptions" @update:value="handleSelect" />
+      <n-menu mode="horizontal" :options="menuOptions" @update:value="handleSelect"/>
       <n-button text @click="checkForUpdates">
         <template #icon>
-          <n-icon><refresh-outline /></n-icon>
+          <n-icon>
+            <refresh-outline/>
+          </n-icon>
         </template>
-        Check for Updates
+        更新
       </n-button>
       <n-button text @click="toggleTheme">
         <template #icon>
           <n-icon>
-            <moon-outline v-if="theme === 'light'" />
-            <sunny-outline v-else />
+            <moon-outline v-if="Theme === lightTheme"/>
+            <sunny-outline v-else/>
           </n-icon>
         </template>
-        {{ theme === 'light' ? 'Dark' : 'Light' }} Mode
+        {{ Theme === lightTheme ? "darkTheme" : "lightTheme" }}
       </n-button>
     </div>
   </div>
 </template>
 
 <script setup>
-import { h, ref } from 'vue'
-import { NMenu, NButton, NIcon, NAvatar } from 'naive-ui'
-import { RefreshOutline, MoonOutline, SunnyOutline,
-  SettingsOutline, HelpCircleOutline, LogOutOutline } from '@vicons/ionicons5'
+import {h, ref} from 'vue'
+import {
+  NMenu, NButton, NIcon, NAvatar, darkTheme,
+  lightTheme
+} from 'naive-ui'
+import {
+  RefreshOutline, MoonOutline, SunnyOutline,
+  SettingsOutline, HelpCircleOutline, LogOutOutline
+} from '@vicons/ionicons5'
 import logo from '../assets/images/logo.svg'
 
 const emit = defineEmits(['select', 'update_theme'])
 
-const theme = ref('light')
+let Theme = ref(lightTheme)
+
 
 const menuOptions = [
   {
@@ -52,50 +60,6 @@ const menuOptions = [
       {
         label: 'Save',
         key: 'save'
-      }
-    ]
-  },
-  {
-    label: 'Edit',
-    key: 'edit',
-    children: [
-      {
-        label: 'Undo',
-        key: 'undo'
-      },
-      {
-        label: 'Redo',
-        key: 'redo'
-      },
-      {
-        label: 'Cut',
-        key: 'cut'
-      },
-      {
-        label: 'Copy',
-        key: 'copy'
-      },
-      {
-        label: 'Paste',
-        key: 'paste'
-      }
-    ]
-  },
-  {
-    label: 'View',
-    key: 'view',
-    children: [
-      {
-        label: 'Zoom In',
-        key: 'zoomIn'
-      },
-      {
-        label: 'Zoom Out',
-        key: 'zoomOut'
-      },
-      {
-        label: 'Reset Zoom',
-        key: 'resetZoom'
       }
     ]
   },
@@ -145,8 +109,9 @@ const checkForUpdates = () => {
 }
 
 const toggleTheme = () => {
-  theme.value = theme.value === 'light' ? 'dark' : 'light'
-  emit('update_theme', theme.value)
+  Theme = Theme === lightTheme ? darkTheme : lightTheme
+  console.log(Theme.value)
+  emit('update_theme', Theme)
 }
 </script>
 
