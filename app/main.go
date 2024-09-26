@@ -2,6 +2,7 @@ package main
 
 import (
 	"app/backend/config"
+	"context"
 	"embed"
 	"fmt"
 	"github.com/wailsapp/wails/v2"
@@ -32,7 +33,7 @@ var (
 
 func main() {
 	app := NewApp()
-	AppConfig := &config.AppConfig{}
+	appConfig := &config.AppConfig{}
 
 	// 主应用程序由对 wails.Run() 的调用组成。 它接受描述应用程序窗口大小、窗口标题、要使用的资源等应用程序配置
 	// 完整说明：https://wails.io/zh-Hans/docs/reference/options/
@@ -56,7 +57,11 @@ func main() {
 		//Logger:                   nil,
 		//LogLevel:                 logger.DEBUG,
 		//OnStartup 此回调在前端创建之后调用，但在 index.html 加载之前调用。 它提供了应用程序上下文。
-		OnStartup: app.startup,
+		// 传递 ctx
+		OnStartup: func(ctx context.Context) {
+			app.Start(ctx)
+			appConfig.Start(ctx)
+		},
 		//在前端加载完毕 index.html 及其资源后调用此回调
 		OnDomReady: app.domReady,
 		//在前端被销毁之后，应用程序终止之前，调用此回调。 它提供了应用程序上下文。
@@ -67,7 +72,7 @@ func main() {
 		//指定向前端暴露哪些结构体方法
 		Bind: []interface{}{
 			app,
-			AppConfig,
+			appConfig,
 		},
 		Windows: &windows.Options{
 			WebviewIsTransparent:              false,

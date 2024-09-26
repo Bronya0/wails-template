@@ -1,49 +1,82 @@
 <template>
   <div>
-    <n-form :model="config" label-placement="left" label-width="auto" require-mark-placement="right-hanging" :style="{ maxWidth: '640px' }">
+    <n-form :model="config" label-placement="left">
       <n-form-item label="窗口宽度">
-        <n-input-number v-model:value="config.width" :min="800" :max="1920" />
+        <n-input-number v-model:value="config.width" :min="800" :max="1920" :style="{ maxWidth: '120px' }"/>
       </n-form-item>
       <n-form-item label="窗口高度">
-        <n-input-number v-model:value="config.height" :min="600" :max="1080" />
+        <n-input-number v-model:value="config.height" :min="600" :max="1080" :style="{ maxWidth: '120px' }"/>
       </n-form-item>
       <n-form-item label="语言">
-        <n-select v-model:value="config.language" :options="languageOptions" />
+        <n-select v-model:value="config.language" :options="languageOptions" :style="{ maxWidth: '120px' }"/>
       </n-form-item>
+
       <n-form-item>
-        <n-button @click="saveConfig" type="primary">保存设置</n-button>
+        <n-space>
+          <n-button @click="theme.value='dark'">
+            深色
+          </n-button>
+          <n-button @click="theme.value='light'">
+            浅色
+          </n-button>
+        </n-space>
       </n-form-item>
+
+
+      <n-form-item>
+        <n-button @click="saveConfig" strong type="primary">保存设置</n-button>
+      </n-form-item>
+
+
     </n-form>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { NForm, NFormItem, NInputNumber, NSelect, NButton} from 'naive-ui'
-import { useMessage } from 'naive-ui'
+import {onMounted, ref} from 'vue'
+import {NButton, NForm, NFormItem, NInputNumber, NSelect, useMessage} from 'naive-ui'
+import {LoadConfig, SaveConfig} from '../../wailsjs/go/config/AppConfig'
+import {WindowSetSize} from "../../wailsjs/runtime";
 
 const message = useMessage()
-
+const props = defineProps({
+  theme: {
+    type: String,
+    default: "light"
+  }
+})
+const emit = defineEmits(['update_theme'])
+const theme = ref(props.theme)
 
 const config = ref({
   width: 1024,
   height: 768,
-  language: 'zh-CN'
+  language: 'zh-CN',
+  theme: "light",
 })
 
 const languageOptions = [
   {label: '中文', value: 'zh-CN'},
   {label: 'English', value: 'en-US'}
 ]
-// onMounted(async () => {
-//   // 从后端加载配置
-//   const loadedConfig = await LoadConfig()
-//   if (loadedConfig) {
-//     config.value = loadedConfig
-//   }
-// })
+
+onMounted(async () => {
+  // 从后端加载配置
+  const loadedConfig = await LoadConfig()
+  console.log(loadedConfig)
+  if (loadedConfig) {
+    config.value = loadedConfig
+    await WindowSetSize(loadedConfig.width, loadedConfig.height)
+    emit('update_theme', loadedConfig.theme)
+  }
+})
 
 const saveConfig = async () => {
+  await SaveConfig(config.value)
+
+  await WindowSetSize(config.value.width, config.value.height)
+
+  emit('update_theme', config.value.theme)
   // 可以添加保存成功的提示
   message.success("保存成功")
 }

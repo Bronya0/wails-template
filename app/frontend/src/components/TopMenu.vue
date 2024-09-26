@@ -32,7 +32,7 @@ import { RefreshOutline, MoonOutline, SunnyOutline,
   SettingsOutline, HelpCircleOutline, LogOutOutline } from '@vicons/ionicons5'
 import logo from '../assets/images/logo.svg'
 
-const emit = defineEmits(['select', 'themeChange'])
+const emit = defineEmits(['select', 'update_theme'])
 
 const theme = ref('light')
 
@@ -146,7 +146,7 @@ const checkForUpdates = () => {
 
 const toggleTheme = () => {
   theme.value = theme.value === 'light' ? 'dark' : 'light'
-  emit('themeChange', theme.value)
+  emit('update_theme', theme.value)
 }
 </script>
 

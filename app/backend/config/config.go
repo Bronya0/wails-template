@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/wailsapp/wails/v2/pkg/runtime"
 	"os"
 	"path/filepath"
 )
@@ -17,22 +16,20 @@ type Config struct {
 	Width    int    `json:"width"`
 	Height   int    `json:"height"`
 	Language string `json:"language"`
+	Theme    string `json:"theme"`
 }
 
-func (a *AppConfig) startup(ctx context.Context) {
+func (a *AppConfig) Start(ctx context.Context) {
 	a.ctx = ctx
 }
 
-func (a *AppConfig) LoadConfig() error {
+func (a *AppConfig) LoadConfig() *Config {
 	config, err := a.GetConfig()
 	if err != nil {
-		return err
+		return nil
 	}
 
-	// 设置窗口大小
-	runtime.WindowSetSize(a.ctx, config.Width, config.Height)
-
-	return nil
+	return config
 }
 
 func (a *AppConfig) GetConfig() (*Config, error) {
@@ -43,10 +40,6 @@ func (a *AppConfig) GetConfig() (*Config, error) {
 
 	data, err := os.ReadFile(configPath)
 	if err != nil {
-		if os.IsNotExist(err) {
-			// 如果配置文件不存在，返回默认配置
-			return &Config{Width: 1024, Height: 768, Language: "zh-CN"}, nil
-		}
 		return nil, err
 	}
 
@@ -61,6 +54,7 @@ func (a *AppConfig) GetConfig() (*Config, error) {
 
 func (a *AppConfig) SaveConfig(config *Config) error {
 	configPath, err := a.getConfigPath()
+	fmt.Println(configPath)
 	if err != nil {
 		return err
 	}
