@@ -21,7 +21,7 @@
             <sunny-outline v-else/>
           </n-icon>
         </template>
-        {{ Theme === lightTheme ? "darkTheme" : "lightTheme" }}
+        {{ Theme.name }}
       </n-button>
     </div>
   </div>
@@ -41,7 +41,7 @@ import logo from '../assets/images/logo.svg'
 
 const emit = defineEmits(['select', 'update_theme'])
 
-let Theme = ref(lightTheme)
+let Theme = lightTheme
 
 
 const menuOptions = [
@@ -109,8 +109,9 @@ const checkForUpdates = () => {
 }
 
 const toggleTheme = () => {
+  console.log(Theme.name)
   Theme = Theme === lightTheme ? darkTheme : lightTheme
-  console.log(Theme.value)
+  console.log(Theme.name)
   emit('update_theme', Theme)
 }
 </script>

@@ -3,12 +3,12 @@
     <n-message-provider>
       <n-layout has-sider>
         <n-layout>
-          <n-layout-header bordered style="height: 8vh; padding: 10px 20px; ">
+          <n-layout-header :class="headerClass" bordered style="height: 8vh; padding: 10px 20px; ">
             <TopMenu @update_theme="themeChange" @select="handleMenuSelect"/>
           </n-layout-header>
 
 
-          <n-layout has-sider style="height: 82vh;">
+          <n-layout has-sider style="height: 84vh;">
             <n-layout-sider
                 bordered
                 collapse-mode="width"
@@ -29,7 +29,6 @@
                   animated
                   :value="activeTab"
                   @update:value="handleTabChange"
-                  pane-style="padding-left: 4px; padding-right: 4px; box-sizing: border-box;"
               >
                 <n-tab-pane v-for="tab in activeMenu.tabs" :key="tab.key" :name="tab.key" :tab="tab.name">
                   <template #tab>
@@ -48,7 +47,7 @@
             </n-layout-content>
           </n-layout>
 
-          <Footer style="height: 10vh;"></Footer>
+          <Footer :class="headerClass" style="height: 8vh;"></Footer>
         </n-layout>
       </n-layout>
     </n-message-provider>
@@ -56,7 +55,7 @@
 </template>
 
 <script setup>
-import {computed, h, ref} from 'vue'
+import {computed, h, ref, shallowRef} from 'vue'
 import {
   NConfigProvider,
   NLayout,
@@ -76,17 +75,16 @@ import Footer from './components/Footer.vue'
 import Settings from './components/Settings.vue'
 import HelloWorld from './components/HelloWorld.vue'
 
-const activeTab = ref('settings')
-const activeMenu = ref(null)
 const collapsed = ref(false)
-const Theme = ref(lightTheme)
+let Theme = ref(lightTheme)
+let headerClass = ref('lightTheme')
 
 // 左侧竖排菜单
 const menuOptions = [
 
   {
     label: '首页',
-    key: 'shouye',
+    key: 'home',
     icon: () => h(HomeOutline),
     tabs: [
       {name: 'hello world',key: 'hello', icon: HomeOutline, component: HelloWorld},
@@ -102,6 +100,9 @@ const menuOptions = [
     ]
   },
 ]
+// 选中的菜单，是json对象；activeTab是key
+const activeMenu = shallowRef(menuOptions[0])
+const activeTab = shallowRef(menuOptions[0].tabs[0].key)
 
 // 点击左侧菜单，切换tab
 function handleMenuSelect(key) {
@@ -117,8 +118,9 @@ function handleTabChange(key) {
   activeTab.value = key
 }
 function themeChange(newTheme) {
-  console.log(newTheme.value)
+  console.log(newTheme.name)
   Theme.value = newTheme
+  headerClass = newTheme === lightTheme ? "lightTheme" : "darkTheme"
 }
 
 </script>
@@ -131,5 +133,8 @@ body {
 
 .tab-content {
   padding: 8px 24px;
+}
+.lightTheme {
+  background-color: #f2f2f2;
 }
 </style>
