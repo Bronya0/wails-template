@@ -1,6 +1,7 @@
 package config
 
 import (
+	"app/backend/common"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -23,67 +24,56 @@ func (a *AppConfig) Start(ctx context.Context) {
 	a.ctx = ctx
 }
 
-func (a *AppConfig) LoadConfig() *Config {
-	config, err := a.GetConfig()
-	if err != nil {
-		return nil
-	}
-
-	return config
-}
-
-func (a *AppConfig) GetConfig() (*Config, error) {
-	configPath, err := a.getConfigPath()
-	if err != nil {
-		return nil, err
+func (a *AppConfig) GetConfig() *Config {
+	configPath := a.getConfigPath()
+	defaultConfig := &Config{
+		Width:    common.Width,
+		Height:   common.Height,
+		Language: "zh",
+		Theme:    common.Theme,
 	}
 
 	data, err := os.ReadFile(configPath)
 	if err != nil {
-		return nil, err
+		return defaultConfig
 	}
 
 	var config Config
 	err = json.Unmarshal(data, &config)
 	if err != nil {
-		return nil, err
+		return defaultConfig
 	}
 
-	return &config, nil
+	return &config
 }
 
-func (a *AppConfig) SaveConfig(config *Config) error {
-	configPath, err := a.getConfigPath()
+func (a *AppConfig) SaveConfig(config *Config) string {
+	configPath := a.getConfigPath()
 	fmt.Println(configPath)
-	if err != nil {
-		return err
-	}
 
 	data, err := json.Marshal(config)
 	if err != nil {
-		return err
+		return err.Error()
 	}
 
 	err = os.MkdirAll(filepath.Dir(configPath), 0755)
 	if err != nil {
-		return err
+		return err.Error()
 	}
-
-	return os.WriteFile(configPath, data, 0644)
+	err = os.WriteFile(configPath, data, 0644)
+	if err != nil {
+		return err.Error()
+	}
+	return ""
 }
 
-func (a *AppConfig) getConfigPath() (string, error) {
-	//homeDir, err := os.UserHomeDir()
-	//if err != nil {
-	//	return "", err
-	//}
-	//获取当前路径
+func (a *AppConfig) getConfigPath() string {
+
 	exePath, err := os.Executable()
 	if err != nil {
-		return "", err
+		return common.ConfigPath
 	}
 	res, _ := filepath.EvalSymlinks(filepath.Dir(exePath))
-	fmt.Println(filepath.Join(res, "config.json"))
-	return filepath.Join(res, "config.json"), nil
+	return filepath.Join(res, common.ConfigPath)
 
 }

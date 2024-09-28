@@ -35,7 +35,7 @@
 <script setup>
 import {onMounted, ref} from 'vue'
 import {NButton, NForm, NFormItem, NInputNumber, NSelect, useMessage} from 'naive-ui'
-import {LoadConfig, SaveConfig} from '../../wailsjs/go/config/AppConfig'
+import {GetConfig, SaveConfig} from '../../wailsjs/go/config/AppConfig'
 import {WindowSetSize} from "../../wailsjs/runtime";
 
 const message = useMessage()
@@ -62,7 +62,7 @@ const languageOptions = [
 
 onMounted(async () => {
   // 从后端加载配置
-  const loadedConfig = await LoadConfig()
+  const loadedConfig = await GetConfig()
   console.log(loadedConfig)
   if (loadedConfig) {
     config.value = loadedConfig
@@ -72,7 +72,11 @@ onMounted(async () => {
 })
 
 const saveConfig = async () => {
-  await SaveConfig(config.value)
+  const err = await SaveConfig(config.value)
+  if (err !== ""){
+    message.error("保存失败：" + err)
+    return
+  }
 
   await WindowSetSize(config.value.width, config.value.height)
 

@@ -14,7 +14,7 @@
         </template>
         更新
       </n-button>
-      <n-button text @click="toggleTheme">
+      <n-button text @click="changeTheme">
         <template #icon>
           <n-icon>
             <moon-outline v-if="Theme === lightTheme"/>
@@ -23,6 +23,26 @@
         </template>
         {{ Theme.name }}
       </n-button>
+
+<!--      <n-button quaternary circle @click="minimizeWindow">-->
+<!--        <template #icon>-->
+<!--          <n-icon><Remove /></n-icon>-->
+<!--        </template>-->
+<!--      </n-button>-->
+<!--      <n-button quaternary circle @click="resizeWindow">-->
+<!--        <template #icon>-->
+<!--          <n-icon>-->
+<!--            <SquareOutline  v-if="!isMaximized"/>-->
+<!--            <CopyOutline  v-else/>-->
+<!--          </n-icon>-->
+<!--        </template>-->
+<!--      </n-button>-->
+<!--      <n-button quaternary circle @click="closeWindow">-->
+<!--        <template #icon>-->
+<!--          <n-icon><Close /></n-icon>-->
+<!--        </template>-->
+<!--      </n-button>-->
+<!--      -->
     </div>
   </div>
 </template>
@@ -31,18 +51,18 @@
 import {h, ref} from 'vue'
 import {
   NMenu, NButton, NIcon, NAvatar, darkTheme,
-  lightTheme
+  lightTheme, NSpace
 } from 'naive-ui'
 import {
   RefreshOutline, MoonOutline, SunnyOutline,
-  SettingsOutline, HelpCircleOutline, LogOutOutline
+  SettingsOutline, HelpCircleOutline, LogOutOutline, SquareOutline, Close, LogoGithub, Remove, CopyOutline
 } from '@vicons/ionicons5'
 import logo from '../assets/images/logo.svg'
+
 
 const emit = defineEmits(['select', 'update_theme'])
 
 let Theme = lightTheme
-
 
 const menuOptions = [
   {
@@ -99,6 +119,27 @@ const menuOptions = [
   }
 ]
 
+// import {Quit, WindowMaximise, WindowMinimise, WindowUnmaximise} from "../../wailsjs/runtime";
+
+// const isMaximized = ref(false);
+
+// const minimizeWindow = () => {
+//   WindowMinimise()
+// }
+//
+// const resizeWindow = () => {
+//   isMaximized.value = !isMaximized.value;
+//   if (isMaximized.value) {
+//     WindowMaximise();
+//   } else {
+//     WindowUnmaximise();
+//   }
+// }
+//
+// const closeWindow = () => {
+//   Quit()
+// }
+
 const handleSelect = (key) => {
   emit('select', key)
 }
@@ -108,7 +149,8 @@ const checkForUpdates = () => {
   console.log('Checking for updates...')
 }
 
-const toggleTheme = () => {
+// 主题切换
+const changeTheme = () => {
   console.log(Theme.name)
   Theme = Theme === lightTheme ? darkTheme : lightTheme
   console.log(Theme.name)
@@ -121,7 +163,7 @@ const toggleTheme = () => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 20px;
+  padding: 0 0 0 20px;
   height: 100%;
 }
 

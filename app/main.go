@@ -1,6 +1,7 @@
 package main
 
 import (
+	"app/backend/common"
 	"app/backend/config"
 	"context"
 	"embed"
@@ -23,30 +24,23 @@ var assets embed.FS
 //go:embed build/appicon.png
 var icon []byte
 
-const (
-	appName = "测试APP"
-)
-
-var (
-	version = "0.0.0"
-)
-
 func main() {
 	app := NewApp()
 	appConfig := &config.AppConfig{}
+	configInfo := appConfig.GetConfig()
 
 	// 主应用程序由对 wails.Run() 的调用组成。 它接受描述应用程序窗口大小、窗口标题、要使用的资源等应用程序配置
 	// 完整说明：https://wails.io/zh-Hans/docs/reference/options/
 	err := wails.Run(&options.App{
-		Title:  appName,
-		Width:  1280,
-		Height: 768,
+		Title:  common.AppName,
+		Width:  configInfo.Width,
+		Height: configInfo.Height,
 		//MinWidth:          1024,
 		//MinHeight:         768,
 		//MaxWidth:  1440,
 		//MaxHeight: 920,
 		//DisableResize:     false,
-		//Frameless:         false, //无边框
+		//Frameless: true, //无边框
 		//HideWindowOnClose: false,  //关闭时隐藏窗口
 		BackgroundColour: &options.RGBA{R: 250, G: 250, B: 252},
 		AssetServer: &assetserver.Options{
@@ -80,7 +74,7 @@ func main() {
 			DisableFramelessWindowDecorations: false,
 		},
 		Linux: &linux.Options{
-			ProgramName:         appName,
+			ProgramName:         common.AppName,
 			Icon:                icon,
 			WebviewGpuPolicy:    linux.WebviewGpuPolicyOnDemand,
 			WindowIsTranslucent: true,
@@ -89,7 +83,7 @@ func main() {
 		Mac: &mac.Options{
 			TitleBar: mac.TitleBarHiddenInset(),
 			About: &mac.AboutInfo{
-				Title:   fmt.Sprintf("%s %s", appName, version),
+				Title:   fmt.Sprintf("%s %s", common.AppName, common.Version),
 				Message: "",
 				Icon:    icon,
 			},

@@ -3,12 +3,13 @@
     <n-message-provider>
       <n-layout has-sider>
         <n-layout>
-          <n-layout-header :class="headerClass" bordered style="height: 8vh; padding: 10px 20px; ">
+          <n-layout-header :class="headerClass" bordered style="height: 8dvh; padding: 10px 20px; --wails-draggable:drag">
             <TopMenu @update_theme="themeChange" @select="handleMenuSelect"/>
           </n-layout-header>
 
 
-          <n-layout has-sider style="height: 84vh;">
+          <n-layout has-sider style="height: 92dvh;">
+
             <n-layout-sider
                 bordered
                 collapse-mode="width"
@@ -47,7 +48,7 @@
             </n-layout-content>
           </n-layout>
 
-          <Footer :class="headerClass" style="height: 8vh;"></Footer>
+<!--          <Footer :class="headerClass" style="height: 8vh;"></Footer>-->
         </n-layout>
       </n-layout>
     </n-message-provider>
