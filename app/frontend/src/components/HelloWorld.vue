@@ -1,7 +1,8 @@
 <script setup>
-import {reactive} from 'vue'
+import {onActivated, onBeforeUnmount, onMounted, reactive} from 'vue'
 import {Greet} from '../../wailsjs/go/main/App'
 import { useMessage } from 'naive-ui'
+import {onDeactivated} from "@vue/runtime-core";
 
 const message = useMessage()
 
@@ -12,14 +13,31 @@ const data = reactive({
 
 function greet() {
   Greet(data.name).then(result => {
+    data.resultText = result
     message.info(result)
   })
 }
 
 
+onMounted(() => {
+  console.info("初始化HelloWorld……")
+})
+
+onBeforeUnmount(() => {
+  console.info("卸载HelloWorld……")
+})
+
+onActivated(() => {
+  console.info("激活HelloWorld组件……")
+})
+onDeactivated(() => {
+  console.info("失活HelloWorld组件……")
+})
+
 </script>
 
 <template>
+
   <main>
     <div class="result">{{ data.resultText }}</div>
     <div class="input-box">

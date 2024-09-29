@@ -62,7 +62,7 @@ const languageOptions = [
 ]
 
 onMounted(async () => {
-  console.info("初始化settings……")
+  console.info("初始化settings2……")
 
   // 从后端加载配置
   const loadedConfig = await GetConfig()
@@ -91,14 +91,14 @@ const saveConfig = async () => {
 
 
 onBeforeUnmount(() => {
-  console.info("卸载settings组件……")
+  console.info("卸载settings2组件……")
 })
 
 onActivated(() => {
-  console.info("激活settings组件……")
+  console.info("激活settings2组件……")
 })
 onDeactivated(() => {
-  console.info("失活settings组件……")
+  console.info("失活settings2组件……")
 })
 
 </script>

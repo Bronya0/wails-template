@@ -3,13 +3,12 @@
     <n-message-provider>
       <n-layout has-sider>
         <n-layout>
-          <n-layout-header :class="headerClass" bordered style="height: 8dvh; padding: 10px 20px; --wails-draggable:drag">
+          <n-layout-header :class="headerClass" bordered
+                           style="height: 8dvh; padding: 10px 20px; --wails-draggable:drag">
             <TopMenu @update_theme="themeChange" @select="handleMenuSelect"/>
           </n-layout-header>
 
-
           <n-layout has-sider style="height: 92dvh;">
-
             <n-layout-sider
                 bordered
                 collapse-mode="width"
@@ -22,16 +21,15 @@
             >
               <SideMenu @select="handleMenuSelect" :options="menuOptions"/>
             </n-layout-sider>
-
             <n-layout-content>
               <n-tabs
-                  v-if="activeMenu && activeMenu.tabs && activeMenu.tabs.length > 0"
                   type="card"
                   animated
                   :value="activeTab"
                   @update:value="handleTabChange"
               >
-                <n-tab-pane v-for="tab in activeMenu.tabs" :key="tab.key" :name="tab.key" :tab="tab.name">
+                <n-tab-pane v-for="tab in activeMenu.tabs" :key="tab.key" :name="tab.key"
+                            :tab="tab.name">
                   <template #tab>
                     <n-space align="center">
                       <n-icon :component="tab.icon"/>
@@ -40,15 +38,15 @@
                   </template>
 
                   <div class="tab-content">
-                    <component :is="tab.component"/>
+                    <keep-alive>
+                      <component :is="tab.component" :name="tab.name" :key="tab.key"/>
+                    </keep-alive>
                   </div>
                 </n-tab-pane>
               </n-tabs>
 
             </n-layout-content>
           </n-layout>
-
-<!--          <Footer :class="headerClass" style="height: 8vh;"></Footer>-->
         </n-layout>
       </n-layout>
     </n-message-provider>
@@ -56,8 +54,9 @@
 </template>
 
 <script setup>
-import {computed, h, ref, shallowRef} from 'vue'
+import {h, ref, shallowRef} from 'vue'
 import {
+  lightTheme,
   NConfigProvider,
   NLayout,
   NLayoutContent,
@@ -65,16 +64,14 @@ import {
   NLayoutSider,
   NMessageProvider,
   NTabPane,
-  NTabs,
-  darkTheme,
-  lightTheme
+  NTabs
 } from 'naive-ui'
 import {HomeOutline, SettingsOutline} from '@vicons/ionicons5'
 import SideMenu from './components/SideMenu.vue'
 import TopMenu from './components/TopMenu.vue'
-import Footer from './components/Footer.vue'
 import Settings from './components/Settings.vue'
 import HelloWorld from './components/HelloWorld.vue'
+import Settings2 from "./components/Settings2.vue";
 
 const collapsed = ref(false)
 let Theme = ref(lightTheme)
@@ -88,7 +85,7 @@ const menuOptions = [
     key: 'home',
     icon: () => h(HomeOutline),
     tabs: [
-      {name: 'hello world',key: 'hello', icon: HomeOutline, component: HelloWorld},
+      {name: 'HelloWorld', key: 'hello', icon: HomeOutline, component: HelloWorld},
     ]
   },
   {
@@ -96,8 +93,8 @@ const menuOptions = [
     key: 'settings',
     icon: () => h(SettingsOutline),
     tabs: [
-      {name: '界面设置',key: 'settings1', icon: SettingsOutline, component: Settings},
-      {name: '界面设置2', key: 'settings2', icon: SettingsOutline, component: Settings},
+      {name: 'Settings', key: 'settings1', icon: SettingsOutline, component: Settings},
+      {name: 'Settings2', key: 'settings2', icon: SettingsOutline, component: Settings2},
     ]
   },
 ]
@@ -105,24 +102,30 @@ const menuOptions = [
 const activeMenu = shallowRef(menuOptions[0])
 const activeTab = shallowRef(menuOptions[0].tabs[0].key)
 
-// 点击左侧菜单，切换tab
+// 点击左侧菜单，切换activeTab的key
 function handleMenuSelect(key) {
-  activeMenu.value = menuOptions.find(item => item.key === key)
-  if (activeMenu.value && activeMenu.value.tabs && activeMenu.value.tabs.length > 0) {
-    activeTab.value = activeMenu.value.tabs[0].key
-  } else {
-    activeTab.value = null
+  const newActiveMenu = menuOptions.find(item => item.key === key)
+  if (newActiveMenu) {
+    activeMenu.value = newActiveMenu
+    if (newActiveMenu.tabs && newActiveMenu.tabs.length > 0) {
+      activeTab.value = newActiveMenu.tabs[0].key
+    } else {
+      activeTab.value = null
+    }
   }
 }
+
 // 点击tab切换
 function handleTabChange(key) {
   activeTab.value = key
 }
+
 function themeChange(newTheme) {
   console.log(newTheme.name)
   Theme.value = newTheme
   headerClass = newTheme === lightTheme ? "lightTheme" : "darkTheme"
 }
+
 
 </script>
 
@@ -135,6 +138,7 @@ body {
 .tab-content {
   padding: 8px 24px;
 }
+
 .lightTheme {
   background-color: #f2f2f2;
 }
