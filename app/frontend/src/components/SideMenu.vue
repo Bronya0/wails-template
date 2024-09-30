@@ -14,7 +14,7 @@ import {ref} from "vue";
 const emit = defineEmits(['select'])
 
 const handleSelect = (key, item) => {
-  emit('select', item)
+  emit('select', key, item)
 }
 
 </script>

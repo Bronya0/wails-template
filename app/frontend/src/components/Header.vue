@@ -14,15 +14,6 @@
         </template>
         更新
       </n-button>
-      <n-button text @click="changeTheme">
-        <template #icon>
-          <n-icon>
-            <moon-outline v-if="Theme === lightTheme"/>
-            <sunny-outline v-else/>
-          </n-icon>
-        </template>
-        {{ Theme.name }}
-      </n-button>
 
     </div>
   </div>
@@ -47,26 +38,18 @@ const props = defineProps({
   }
 });
 
-const emit = defineEmits(['select', 'update_theme'])
-
-let Theme = lightTheme
+const emit = defineEmits(['select'])
 
 
 const handleSelect = (key, item) => {
-  emit('select', item)
+  emit('select', key, item)
 }
 
 const checkForUpdates = () => {
   console.log('Checking for updates...')
 }
 
-// 主题切换
-const changeTheme = () => {
-  console.log(Theme.name)
-  Theme = Theme === lightTheme ? darkTheme : lightTheme
-  console.log(Theme.name)
-  emit('update_theme', Theme)
-}
+
 </script>
 
 <style scoped>
