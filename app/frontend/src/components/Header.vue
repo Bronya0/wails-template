@@ -15,16 +15,16 @@
         更新
       </n-button>
 
-      <n-button quaternary text :focusable="false" @click="minimizeWindow" :render-icon="renderIcon(Remove)"/>
-      <n-button quaternary text :focusable="false" @click="resizeWindow">
+      <n-button quaternary  :focusable="false" @click="minimizeWindow" :render-icon="renderIcon(Remove)" style="margin-left: 8px"/>
+      <n-button quaternary  :focusable="false" @click="resizeWindow">
         <template #icon>
-          <n-icon size="small">
+          <n-icon size="16px">
             <SquareOutline v-if="!isMaximized"/>
             <CopyOutline v-else/>
           </n-icon>
         </template>
       </n-button>
-      <n-button quaternary text :focusable="false" @click="closeWindow" :render-icon="renderIcon(Close)"/>
+      <n-button quaternary  :focusable="false" @click="closeWindow" :render-icon="renderIcon(Close)" />
 
     </div>
   </div>
@@ -110,7 +110,4 @@ const closeWindow = () => {
   align-items: center;
 }
 
-.right-section .n-button {
-  margin-left: 18px;
-}
 </style>
