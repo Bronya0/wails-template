@@ -85,23 +85,20 @@ const saveConfig = async () => {
   emit('update_theme', theme)
   // 可以添加保存成功的提示
   message.success("保存成功")
-
   config.value = await GetConfig()
-
 
 }
 
-
-
-onBeforeUnmount(() => {
-  console.info("卸载settings组件……")
-})
-
-onActivated(() => {
-  console.info("激活settings组件……")
-})
-onDeactivated(() => {
-  console.info("失活settings组件……")
-})
+//
+// onBeforeUnmount(() => {
+//   console.info("卸载settings组件……")
+// })
+//
+// onActivated(() => {
+//   console.info("激活settings组件……")
+// })
+// onDeactivated(() => {
+//   console.info("失活settings组件……")
+// })
 
 </script>

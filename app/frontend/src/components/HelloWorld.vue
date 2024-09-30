@@ -1,3 +1,15 @@
+<template>
+
+  <main>
+    <div class="result">{{ data.resultText }}</div>
+    <div class="input-box">
+      <n-input v-model:value="data.name" type="text" placeholder="input name" class="input"/>
+      <n-button type="info" @click="greet"> Greet </n-button>
+    </div>
+  </main>
+</template>
+
+
 <script setup>
 import {onActivated, onBeforeUnmount, onMounted, reactive} from 'vue'
 import {Greet} from '../../wailsjs/go/main/App'
@@ -36,16 +48,6 @@ onDeactivated(() => {
 
 </script>
 
-<template>
-
-  <main>
-    <div class="result">{{ data.resultText }}</div>
-    <div class="input-box">
-      <n-input v-model:value="data.name" type="text" placeholder="input name" class="input"/>
-      <n-button type="info" @click="greet"> Greet </n-button>
-    </div>
-  </main>
-</template>
 
 <style scoped>
 .result {

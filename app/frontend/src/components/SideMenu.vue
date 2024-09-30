@@ -12,16 +12,13 @@ import { NMenu } from 'naive-ui'
 import {ref} from "vue";
 
 const emit = defineEmits(['select'])
-const collapsed = ref(false)
 
-const handleSelect = (key) => {
-  emit('select', key)
+const handleSelect = (key, item) => {
+  emit('select', item)
 }
 
 </script>
 
 <style scoped>
-.side-menu {
-  height: 100%;
-}
+
 </style>

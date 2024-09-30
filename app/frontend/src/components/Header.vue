@@ -5,7 +5,7 @@
       <h1 class="title">测试APP</h1>
     </div>
     <div class="right-section">
-      <n-menu mode="horizontal" :options="menuOptions" @update:value="handleSelect"/>
+      <n-menu mode="horizontal" :options="props.options" @update:value="handleSelect"/>
       <n-button text @click="checkForUpdates">
         <template #icon>
           <n-icon>
@@ -24,128 +24,39 @@
         {{ Theme.name }}
       </n-button>
 
-<!--      <n-button quaternary circle @click="minimizeWindow">-->
-<!--        <template #icon>-->
-<!--          <n-icon><Remove /></n-icon>-->
-<!--        </template>-->
-<!--      </n-button>-->
-<!--      <n-button quaternary circle @click="resizeWindow">-->
-<!--        <template #icon>-->
-<!--          <n-icon>-->
-<!--            <SquareOutline  v-if="!isMaximized"/>-->
-<!--            <CopyOutline  v-else/>-->
-<!--          </n-icon>-->
-<!--        </template>-->
-<!--      </n-button>-->
-<!--      <n-button quaternary circle @click="closeWindow">-->
-<!--        <template #icon>-->
-<!--          <n-icon><Close /></n-icon>-->
-<!--        </template>-->
-<!--      </n-button>-->
-<!--      -->
     </div>
   </div>
 </template>
 
 <script setup>
-import {h, ref} from 'vue'
 import {
   NMenu, NButton, NIcon, NAvatar, darkTheme,
   lightTheme, NSpace
 } from 'naive-ui'
 import {
   RefreshOutline, MoonOutline, SunnyOutline,
-  SettingsOutline, HelpCircleOutline, LogOutOutline, SquareOutline, Close, LogoGithub, Remove, CopyOutline
+  HelpCircleOutline, LogOutOutline, SquareOutline, Close, LogoGithub, Remove, CopyOutline
 } from '@vicons/ionicons5'
 import logo from '../assets/images/logo.svg'
 
+
+const props = defineProps({
+  options: {
+    type: Array,
+    required: true
+  }
+});
 
 const emit = defineEmits(['select', 'update_theme'])
 
 let Theme = lightTheme
 
-const menuOptions = [
-  {
-    label: 'File',
-    key: 'file',
-    children: [
-      {
-        label: 'New',
-        key: 'new'
-      },
-      {
-        label: 'Open',
-        key: 'open'
-      },
-      {
-        label: 'Save',
-        key: 'save'
-      }
-    ]
-  },
-  {
-    label: () =>
-        h(
-            'a',
-            {
-              href: 'https://github.com/yourusername/yourproject',
-              target: '_blank',
-              rel: 'noopenner noreferrer'
-            },
-            'GitHub'
-        ),
-    key: 'github'
-  },
-  {
-    label: 'More',
-    key: 'more',
-    children: [
-      {
-        label: 'Settings',
-        key: 'settings',
-        icon: () => h(NIcon, null, {default: () => h(SettingsOutline)})
-      },
-      {
-        label: 'Help',
-        key: 'help',
-        icon: () => h(NIcon, null, {default: () => h(HelpCircleOutline)})
-      },
-      {
-        label: 'Logout',
-        key: 'logout',
-        icon: () => h(NIcon, null, {default: () => h(LogOutOutline)})
-      }
-    ]
-  }
-]
 
-// import {Quit, WindowMaximise, WindowMinimise, WindowUnmaximise} from "../../wailsjs/runtime";
-
-// const isMaximized = ref(false);
-
-// const minimizeWindow = () => {
-//   WindowMinimise()
-// }
-//
-// const resizeWindow = () => {
-//   isMaximized.value = !isMaximized.value;
-//   if (isMaximized.value) {
-//     WindowMaximise();
-//   } else {
-//     WindowUnmaximise();
-//   }
-// }
-//
-// const closeWindow = () => {
-//   Quit()
-// }
-
-const handleSelect = (key) => {
-  emit('select', key)
+const handleSelect = (key, item) => {
+  emit('select', item)
 }
 
 const checkForUpdates = () => {
-  // Implement your update checking logic here
   console.log('Checking for updates...')
 }
 
@@ -159,6 +70,7 @@ const changeTheme = () => {
 </script>
 
 <style scoped>
+
 .top-menu {
   display: flex;
   justify-content: space-between;
