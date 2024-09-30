@@ -15,20 +15,31 @@
         更新
       </n-button>
 
+      <n-button quaternary text :focusable="false" @click="minimizeWindow" :render-icon="renderIcon(Remove)"/>
+      <n-button quaternary text :focusable="false" @click="resizeWindow">
+        <template #icon>
+          <n-icon size="small">
+            <SquareOutline v-if="!isMaximized"/>
+            <CopyOutline v-else/>
+          </n-icon>
+        </template>
+      </n-button>
+      <n-button quaternary text :focusable="false" @click="closeWindow" :render-icon="renderIcon(Close)"/>
+
     </div>
   </div>
 </template>
 
 <script setup>
 import {
-  NMenu, NButton, NIcon, NAvatar, darkTheme,
-  lightTheme, NSpace
+  NMenu, NButton, NIcon, NAvatar, NSpace
 } from 'naive-ui'
 import {
-  RefreshOutline, MoonOutline, SunnyOutline,
-  HelpCircleOutline, LogOutOutline, SquareOutline, Close, LogoGithub, Remove, CopyOutline
+  RefreshOutline, SquareOutline, Close, Remove, CopyOutline
 } from '@vicons/ionicons5'
 import logo from '../assets/images/logo.svg'
+import {h, ref} from "vue";
+import {Quit, WindowMaximise, WindowMinimise, WindowUnmaximise} from "../../wailsjs/runtime";
 
 
 const props = defineProps({
@@ -49,6 +60,28 @@ const checkForUpdates = () => {
   console.log('Checking for updates...')
 }
 
+function renderIcon(icon) {
+  return () => h(NIcon, null, {default: () => h(icon)});
+}
+
+const isMaximized = ref(false);
+
+const minimizeWindow = () => {
+  WindowMinimise()
+}
+
+const resizeWindow = () => {
+  isMaximized.value = !isMaximized.value;
+  if (isMaximized.value) {
+    WindowMaximise();
+  } else {
+    WindowUnmaximise();
+  }
+}
+
+const closeWindow = () => {
+  Quit()
+}
 
 </script>
 
@@ -78,6 +111,6 @@ const checkForUpdates = () => {
 }
 
 .right-section .n-button {
-  margin-left: 10px;
+  margin-left: 18px;
 }
 </style>

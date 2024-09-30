@@ -46,7 +46,7 @@ const emit = defineEmits(['update_theme'])
 let theme = lightTheme
 
 const config = ref({
-  width: 1024,
+  width: 1248,
   height: 768,
   language: 'zh-CN',
   theme: theme.name,
@@ -65,12 +65,9 @@ onMounted(async () => {
   console.log(loadedConfig)
   if (loadedConfig) {
     config.value = loadedConfig
-    await WindowSetSize(loadedConfig.width, loadedConfig.height)
-
-    theme = loadedConfig.theme === 'dark' ? darkTheme : lightTheme
-    emit('update_theme', theme)
   }
 })
+
 
 const saveConfig = async () => {
   config.value.theme = theme.name

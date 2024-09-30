@@ -13,10 +13,13 @@
           <n-layout has-sider style="height: 92dvh;">
             <n-layout-sider
                 bordered
+                :collapsed="collapsed"
                 collapse-mode="width"
                 :collapsed-width="64"
-                :width="140"
+                :width="120"
                 show-trigger
+                @collapse="collapsed = true"
+                @expand="collapsed = false"
             >
               <SideMenu @select="handleMenuSelect" :options="sideMenuOptions"/>
 
@@ -76,6 +79,7 @@ import {WindowSetDarkTheme, WindowSetLightTheme, WindowSetSize} from "../wailsjs
 
 let Theme = shallowRef(lightTheme)
 let headerClass = shallowRef('lightTheme')
+const collapsed = shallowRef(true)
 
 onMounted(async () => {
   // 从后端加载配置
