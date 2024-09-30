@@ -28,7 +28,7 @@
                   :value="activeTab"
                   @update:value="handleTabChange"
               >
-                <n-tab-pane v-for="tab in activeMenu.tabs" :key="tab.key" :name="tab.key"
+                <n-tab-pane v-for="tab in activeMenu.tabs" :key="tab.key" :name="tab.key" display-directive="show"
                             :tab="tab.name">
                   <template #tab>
                     <n-space align="center">
