@@ -109,7 +109,7 @@ const sideMenuOptions = [
     component: Settings
   },
 ]
-const openTabs = shallowRef([menuOptions[0].children[0]])
+const openTabs = ref([menuOptions[0].children[0]])
 const activeTab = shallowRef(menuOptions[0].children[0].key)
 
 // 切换菜单
@@ -147,6 +147,7 @@ function findTabByKey(tabs, key) {
 // 关闭tab
 function handleTabClose(key) {
   const index = openTabs.value.findIndex(tab => tab.key === key);
+  console.log("delete tab index: " + index)
 
   if (index !== -1) {
     // 从 openTabs 中删除该项
@@ -157,6 +158,8 @@ function handleTabClose(key) {
       activeTab.value = openTabs.value[openTabs.value.length - 1].key;
     }
   }
+  console.log("activeTab: " + activeTab.value)
+
 }
 
 function renderIcon(icon) {
