@@ -4,13 +4,13 @@
       <n-layout has-sider>
         <n-layout>
           <n-layout-header :class="headerClass" bordered
-                           style="height: 8dvh; padding: 10px 20px; --wails-draggable:drag">
+                           style="height: 6dvh; padding: 0 20px 0 0; --wails-draggable:drag">
 
             <Header :options="menuOptions"  @select="handleMenuSelect"/>
 
           </n-layout-header>
 
-          <n-layout has-sider style="height: 92dvh;">
+          <n-layout has-sider style="height: 94dvh;">
             <n-layout-sider
                 bordered
                 :collapsed="collapsed"
@@ -137,7 +137,7 @@ const sideMenuOptions = [
 ]
 
 const openTabs = shallowRef([menuOptions[0].children[0]])
-const activeTab = ref("")
+const activeTab = ref(menuOptions[0].children[0].key)
 
 // 切换菜单
 // item是从Header里handleSelect emits传过来的菜单对象

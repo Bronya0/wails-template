@@ -40,7 +40,7 @@ func main() {
 		//MaxWidth:  1440,
 		//MaxHeight: 920,
 		//DisableResize:     false,
-		Frameless: true, //无边框
+		//Frameless: true, //无边框
 		//HideWindowOnClose: false,  //关闭时隐藏窗口
 		BackgroundColour: &options.RGBA{R: 250, G: 250, B: 252},
 		AssetServer: &assetserver.Options{
