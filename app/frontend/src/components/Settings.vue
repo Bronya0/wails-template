@@ -11,14 +11,15 @@
         <n-select v-model:value="config.language" :options="languageOptions" :style="{ maxWidth: '120px' }"/>
       </n-form-item>
 
-      <n-form-item>
+      <n-form-item label="主题">
         <n-space>
-          <n-button @click="theme.value='dark'">
-            深色
+          <n-button strong  @click="theme=darkTheme">
+            dark
           </n-button>
-          <n-button @click="theme.value='light'">
-            浅色
+          <n-button strong  type="tertiary" @click="theme=lightTheme">
+            light
           </n-button>
+
         </n-space>
       </n-form-item>
 
@@ -33,27 +34,22 @@
 </template>
 
 <script setup>
-import {onMounted, onBeforeUnmount, ref, onActivated} from 'vue'
-import {NButton, NForm, NFormItem, NInputNumber, NSelect, useMessage} from 'naive-ui'
+import {onActivated, onBeforeUnmount, onMounted, ref} from 'vue'
+import {darkTheme, lightTheme, NButton, NForm, NFormItem, NInputNumber, NSelect, useMessage} from 'naive-ui'
 import {GetConfig, SaveConfig} from '../../wailsjs/go/config/AppConfig'
 import {WindowSetSize} from "../../wailsjs/runtime";
 import {onDeactivated} from "@vue/runtime-core";
 
 const message = useMessage()
-const props = defineProps({
-  theme: {
-    type: String,
-    default: "light"
-  }
-})
+
 const emit = defineEmits(['update_theme'])
-const theme = ref(props.theme)
+let theme = lightTheme
 
 const config = ref({
   width: 1024,
   height: 768,
   language: 'zh-CN',
-  theme: "light",
+  theme: theme.name,
 })
 
 const languageOptions = [
@@ -70,11 +66,14 @@ onMounted(async () => {
   if (loadedConfig) {
     config.value = loadedConfig
     await WindowSetSize(loadedConfig.width, loadedConfig.height)
-    emit('update_theme', loadedConfig.theme)
+
+    theme = loadedConfig.theme === 'dark' ? darkTheme : lightTheme
+    emit('update_theme', theme)
   }
 })
 
 const saveConfig = async () => {
+  config.value.theme = theme.name
   const err = await SaveConfig(config.value)
   if (err !== ""){
     message.error("保存失败：" + err)
@@ -83,9 +82,13 @@ const saveConfig = async () => {
 
   await WindowSetSize(config.value.width, config.value.height)
 
-  emit('update_theme', config.value.theme)
+  emit('update_theme', theme)
   // 可以添加保存成功的提示
   message.success("保存成功")
+
+  config.value = await GetConfig()
+
+
 }
 
 

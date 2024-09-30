@@ -5,7 +5,7 @@
         <n-layout>
           <n-layout-header :class="headerClass" bordered
                            style="height: 8dvh; padding: 10px 20px; --wails-draggable:drag">
-            <TopMenu @update_theme="themeChange" @select="handleMenuSelect"/>
+            <Header @update_theme="themeChange" @select="handleMenuSelect"/>
           </n-layout-header>
 
           <n-layout has-sider style="height: 92dvh;">
@@ -13,7 +13,7 @@
                 bordered
                 collapse-mode="width"
                 :collapsed-width="64"
-                :width="138"
+                :width="140"
                 :collapsed="collapsed"
                 show-trigger
                 @collapse="collapsed = true"
@@ -38,9 +38,7 @@
                   </template>
 
                   <div class="tab-content">
-                    <keep-alive>
-                      <component :is="tab.component" :name="tab.name" :key="tab.key"/>
-                    </keep-alive>
+                      <component :is="tab.component" :name="tab.name" :key="tab.key" @update_theme="themeChange"/>
                   </div>
                 </n-tab-pane>
               </n-tabs>
@@ -68,12 +66,11 @@ import {
 } from 'naive-ui'
 import {HomeOutline, SettingsOutline} from '@vicons/ionicons5'
 import SideMenu from './components/SideMenu.vue'
-import TopMenu from './components/TopMenu.vue'
+import Header from './components/Header.vue'
 import Settings from './components/Settings.vue'
 import HelloWorld from './components/HelloWorld.vue'
-import Settings2 from "./components/Settings2.vue";
 
-const collapsed = ref(false)
+const collapsed = ref(true)
 let Theme = ref(lightTheme)
 let headerClass = ref('lightTheme')
 
@@ -82,19 +79,18 @@ const menuOptions = [
 
   {
     label: '首页',
-    key: 'home',
+    key: 'HelloWorld',
     icon: () => h(HomeOutline),
     tabs: [
-      {name: 'HelloWorld', key: 'hello', icon: HomeOutline, component: HelloWorld},
+      {name: 'HelloWorld', key: 'HelloWorld', icon: HomeOutline, component: HelloWorld},
     ]
   },
   {
     label: '设置',
-    key: 'settings',
+    key: 'Settings',
     icon: () => h(SettingsOutline),
     tabs: [
-      {name: 'Settings', key: 'settings1', icon: SettingsOutline, component: Settings},
-      {name: 'Settings2', key: 'settings2', icon: SettingsOutline, component: Settings2},
+      {name: 'Settings', key: 'Settings', icon: SettingsOutline, component: Settings},
     ]
   },
 ]

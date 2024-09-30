@@ -8,10 +8,11 @@
 </template>
 
 <script setup>
-import {h, ref} from 'vue'
 import { NMenu } from 'naive-ui'
+import {ref} from "vue";
 
 const emit = defineEmits(['select'])
+const collapsed = ref(false)
 
 const handleSelect = (key) => {
   emit('select', key)
