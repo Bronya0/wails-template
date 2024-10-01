@@ -89,11 +89,11 @@ onMounted(async () => {
     if (loadedConfig.theme === 'light'){
       Theme.value = lightTheme
       headerClass = "lightTheme"
-      WindowSetLightTheme()
+      // WindowSetLightTheme()
     }else {
       Theme.value = darkTheme
       headerClass = "darkTheme"
-      WindowSetDarkTheme()
+      // WindowSetDarkTheme()
     }
   }
 })
@@ -119,6 +119,7 @@ const menuOptions = [
     ]
   },
 ]
+
 const sideMenuOptions = [
   {
     label: '主页',
@@ -202,11 +203,11 @@ function themeChange(newTheme) {
   if (newTheme === lightTheme){
     Theme.value = lightTheme
     headerClass = "lightTheme"
-    WindowSetLightTheme()
+    // WindowSetLightTheme()
   }else {
     Theme.value = darkTheme
     headerClass = "darkTheme"
-    WindowSetDarkTheme()
+    // WindowSetDarkTheme()
   }
 }
 
