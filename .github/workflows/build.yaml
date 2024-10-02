@@ -5,27 +5,18 @@ on:
     types: [ created ]
 
 env:
-  # Necessary for most environments as build failure can occur due to OOM issues
   NODE_OPTIONS: "--max-old-space-size=4096"
 
 jobs:
-  build:
-    strategy:
-      # Failure in one platform build won't impact the others
-      fail-fast: false
-      matrix:
-        build:
-          - name: 'demo-app'
-            platform: 'linux/amd64'
-            os: 'ubuntu-latest'
-          - name: 'demo-app'
-            platform: 'windows/amd64'
-            os: 'windows-latest'
-          - name: 'demo-app'
-            platform: 'darwin/universal'
-            os: 'macos-latest'
+  build-windows:
+    runs-on:
+      strategy:
+        matrix:
+          build:
+            - name: 'demo-app'
+              platform: 'windows/amd64'
+              os: 'windows-latest'
 
-    runs-on: ${{ matrix.build.os }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -40,3 +31,101 @@ jobs:
           build-name: ${{ matrix.build.name }}
           build-platform: ${{ matrix.build.platform }}
           go-version: '1.22'
+          package: false
+
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: app/build/bin/${{ matrix.build.name }}.exe
+          asset_name: ${{ matrix.build.name }}-${{ github.event.release.tag_name }}-${{ matrix.build.platform }}.exe
+          asset_content_type: application/octet-stream
+
+  build-linux:
+    runs-on:
+      strategy:
+        matrix:
+          build:
+            - name: 'demo-app'
+              platform: 'linux/amd64'
+              os: 'ubuntu-latest'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: Build wails
+        uses: dAppServer/wails-build-action@v2.2
+        id: build
+        with:
+          app-working-directory: app
+          build-name: ${{ matrix.build.name }}
+          build-platform: ${{ matrix.build.platform }}
+          go-version: '1.22'
+          package: false
+
+      # 打包.app文件夹为zip或tar.gz以方便传输
+      - name: Package .app folder
+        if: runner.os == 'macOS'
+        run: |
+          cd app/build/bin
+          tar -czf ${{ matrix.build.name }}.tar.gz ${{ matrix.build.name }}.app
+
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: app/build/bin/${{ matrix.build.name }}.tar.gz
+          asset_name: ${{ matrix.build.name }}-${{ matrix.build.platform }}-${{ github.event.release.tag_name }}.tar.gz
+          asset_content_type: application/octet-stream
+
+
+  build-macos:
+    runs-on:
+      strategy:
+        matrix:
+          build:
+            - name: 'demo-app'
+              platform: 'darwin/universal'
+              os: 'macos-latest'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: Build wails
+        uses: dAppServer/wails-build-action@v2.2
+        id: build
+        with:
+          app-working-directory: app
+          build-name: ${{ matrix.build.name }}
+          build-platform: ${{ matrix.build.platform }}
+          go-version: '1.22'
+          package: false
+
+      # 打包.app文件夹为zip或tar.gz以方便传输
+      - name: Package .app folder
+        if: runner.os == 'macOS'
+        run: |
+          cd app/build/bin
+          tar -czf ${{ matrix.build.name }}.tar.gz ${{ matrix.build.name }}
+
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: app/build/bin/${{ matrix.build.name }}.tar.gz
+          asset_name: ${{ matrix.build.name }}-${{ matrix.build.platform }}-${{ github.event.release.tag_name }}.tar.gz
+          asset_content_type: application/octet-stream
