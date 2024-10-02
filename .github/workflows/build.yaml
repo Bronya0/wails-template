@@ -9,13 +9,13 @@ env:
 
 jobs:
   build-windows:
-    runs-on:
-      strategy:
-        matrix:
-          build:
-            - name: 'demo-app'
-              platform: 'windows/amd64'
-              os: 'windows-latest'
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        build:
+          - name: 'demo-app'
+            platform: 'windows/amd64'
+            os: 'windows-latest'
 
     steps:
       - name: Checkout
@@ -45,13 +45,13 @@ jobs:
           asset_content_type: application/octet-stream
 
   build-linux:
-    runs-on:
-      strategy:
-        matrix:
-          build:
-            - name: 'demo-app'
-              platform: 'linux/amd64'
-              os: 'ubuntu-latest'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        build:
+          - name: 'demo-app'
+            platform: 'linux/amd64'
+            os: 'ubuntu-latest'
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -88,13 +88,13 @@ jobs:
 
 
   build-macos:
-    runs-on:
-      strategy:
-        matrix:
-          build:
-            - name: 'demo-app'
-              platform: 'darwin/universal'
-              os: 'macos-latest'
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        build:
+          - name: 'demo-app'
+            platform: 'darwin/universal'
+            os: 'macos-latest'
 
     steps:
       - name: Checkout
