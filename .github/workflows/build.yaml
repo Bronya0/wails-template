@@ -1,10 +1,8 @@
 name: Wails build
 
 on:
-  push:
-    tags:
-      # Match any new tag
-      - '*'
+  release:
+    types: [ created ]
 
 env:
   # Necessary for most environments as build failure can occur due to OOM issues
@@ -33,6 +31,9 @@ jobs:
         uses: actions/checkout@v2
         with:
           submodules: recursive
+
+      - name: Enter Project Directory
+        run: cd app
 
       - name: Build wails
         uses: dAppServer/wails-build-action@v2.2

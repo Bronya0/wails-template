@@ -1,6 +1,6 @@
 {
-  "name": "app",
-  "outputfilename": "app",
+  "name": "demo-app",
+  "outputfilename": "demo-app",
   "frontend:install": "npm install",
   "frontend:build": "npm run build",
   "frontend:dev:watcher": "npm run dev",
