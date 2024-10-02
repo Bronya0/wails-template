@@ -33,24 +33,16 @@ jobs:
           go-version: '1.22'
           package: false
 
-      - uses: actions/upload-artifact@v3
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: Wails Build ${{runner.os}} ${{inputs.build-name}}
-          path: |
-            ./app/build/bin/
-            ./app/build/bin/*
-
-#
-#      - name: Upload Release Asset
-#        id: upload-release-asset
-#        uses: actions/upload-release-asset@v1
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        with:
-#          upload_url: ${{ github.event.release.upload_url }}
-#          asset_path: app/build/bin/${{ matrix.build.name }}
-#          asset_name: ${{ matrix.build.name }}-${{ github.event.release.tag_name }}-${{ matrix.build.platform }}.exe
-#          asset_content_type: application/octet-stream
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: app/build/bin/${{ matrix.build.name }}
+          asset_name: ${{ matrix.build.name }}-${{ github.event.release.tag_name }}-${{ matrix.build.platform }}.exe
+          asset_content_type: application/octet-stream
 
 
   build-macos:
@@ -78,23 +70,25 @@ jobs:
           go-version: '1.22'
           package: false
 
-      - uses: actions/upload-artifact@v3
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: Wails Build ${{runner.os}} ${{inputs.build-name}}
-          path: |
-            ./app/build/bin/
-            ./app/build/bin/*
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: app/build/bin/${{ matrix.build.name }}.pkg
+          asset_name: ${{ matrix.build.name }}-${{ matrix.build.platform }}-${{ github.event.release.tag_name }}.pkg
+          asset_content_type: application/octet-stream
 
-#      - name: Upload Release Asset
-#        id: upload-release-asset
-#        uses: actions/upload-release-asset@v1
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        with:
-#          upload_url: ${{ github.event.release.upload_url }}
-#          asset_path: app/build/bin/${{ matrix.build.name }}.tar.gz
-#          asset_name: ${{ matrix.build.name }}-${{ matrix.build.platform }}-${{ github.event.release.tag_name }}.tar.gz
-#          asset_content_type: application/octet-stream
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: app/build/bin/${{ matrix.build.name }}.app.zip
+          asset_name: ${{ matrix.build.name }}-${{ matrix.build.platform }}-${{ github.event.release.tag_name }}.app.zip
+          asset_content_type: application/octet-stream
 
 
   build-linux:
@@ -121,26 +115,18 @@ jobs:
           go-version: '1.22'
           package: false
 
-#      # 打包.app文件夹为zip或tar.gz以方便传输
-#      - name: Package .app folder
-#        run: |
-#          cd app/build/bin
-#          tar -czf ${{ matrix.build.name }}.tar.gz ${{ matrix.build.name }}
+      - name: Package .app folder
+        run: |
+          cd app/build/bin
+          tar -czf ${{ matrix.build.name }}.tar.gz ${{ matrix.build.name }}
 
-      - uses: actions/upload-artifact@v3
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: Wails Build ${{runner.os}} ${{inputs.build-name}}
-          path: |
-            ./app/build/bin/
-            ./app/build/bin/*
-#
-#      - name: Upload Release Asset
-#        id: upload-release-asset
-#        uses: actions/upload-release-asset@v1
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        with:
-#          upload_url: ${{ github.event.release.upload_url }}
-#          asset_path: app/build/bin/${{ matrix.build.name }}.tar.gz
-#          asset_name: ${{ matrix.build.name }}-${{ matrix.build.platform }}-${{ github.event.release.tag_name }}.tar.gz
-#          asset_content_type: application/octet-stream
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: app/build/bin/${{ matrix.build.name }}.tar.gz
+          asset_name: ${{ matrix.build.name }}-${{ matrix.build.platform }}-${{ github.event.release.tag_name }}.tar.gz
+          asset_content_type: application/octet-stream
