@@ -32,13 +32,11 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Set up the working directory
-        working-directory: ./app
-
       - name: Build wails
         uses: dAppServer/wails-build-action@v2.2
         id: build
         with:
+          app-working-directory: app
           build-name: ${{ matrix.build.name }}
           build-platform: ${{ matrix.build.platform }}
           go-version: '1.20'
