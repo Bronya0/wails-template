@@ -32,8 +32,10 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Set up the working directory
+        working-directory: ./app
+
       - name: Build wails
-        working-directory: app # 设置工作目录
         uses: dAppServer/wails-build-action@v2.2
         id: build
         with:
