@@ -70,10 +70,9 @@ jobs:
 
       # 打包.app文件夹为zip或tar.gz以方便传输
       - name: Package .app folder
-        if: runner.os == 'macOS'
         run: |
           cd app/build/bin
-          tar -czf ${{ matrix.build.name }}.tar.gz ${{ matrix.build.name }}.app
+          tar -czf ${{ matrix.build.name }}.tar.gz ${{ matrix.build.name }}
 
       - name: Upload Release Asset
         id: upload-release-asset
@@ -114,10 +113,9 @@ jobs:
 
       # 打包.app文件夹为zip或tar.gz以方便传输
       - name: Package .app folder
-        if: runner.os == 'macOS'
         run: |
           cd app/build/bin
-          tar -czf ${{ matrix.build.name }}.tar.gz ${{ matrix.build.name }}
+          tar -czf ${{ matrix.build.name }}.tar.gz ${{ matrix.build.name }}.app
 
       - name: Upload Release Asset
         id: upload-release-asset
