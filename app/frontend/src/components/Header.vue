@@ -32,14 +32,14 @@
 
 <script setup>
 import {
-  NMenu, NButton, NIcon, NAvatar, NSpace
+  NMenu, NButton, NIcon, NAvatar
 } from 'naive-ui'
 import {
-  RefreshOutline, SquareOutline, Close, Remove, CopyOutline
+  RefreshOutline,
 } from '@vicons/ionicons5'
 import logo from '../assets/images/logo.svg'
-import {h, ref} from "vue";
-import {Quit, WindowMaximise, WindowMinimise, WindowUnmaximise} from "../../wailsjs/runtime";
+// import {ref} from "vue";
+// import {Quit, WindowMaximise, WindowMinimise, WindowUnmaximise} from "../../wailsjs/runtime";
 
 
 const props = defineProps({
@@ -60,28 +60,25 @@ const checkForUpdates = () => {
   console.log('Checking for updates...')
 }
 
-function renderIcon(icon) {
-  return () => h(NIcon, null, {default: () => h(icon)});
-}
 
-const isMaximized = ref(false);
-
-const minimizeWindow = () => {
-  WindowMinimise()
-}
-
-const resizeWindow = () => {
-  isMaximized.value = !isMaximized.value;
-  if (isMaximized.value) {
-    WindowMaximise();
-  } else {
-    WindowUnmaximise();
-  }
-}
-
-const closeWindow = () => {
-  Quit()
-}
+// const isMaximized = ref(false);
+//
+// const minimizeWindow = () => {
+//   WindowMinimise()
+// }
+//
+// const resizeWindow = () => {
+//   isMaximized.value = !isMaximized.value;
+//   if (isMaximized.value) {
+//     WindowMaximise();
+//   } else {
+//     WindowUnmaximise();
+//   }
+// }
+//
+// const closeWindow = () => {
+//   Quit()
+// }
 
 </script>
 

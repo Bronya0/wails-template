@@ -43,7 +43,10 @@
                   </template>
 
                   <div class="tab-content">
-                    <component :is="tab.component" :name="tab.label" :key="tab.key" @update_theme="themeChange"/>
+                    <component :is="tab.component" :name="tab.label" :key="tab.key"
+                               @update_theme="themeChange"
+                               @selectTab="handleTabChangeByIndex"
+                    />
                   </div>
                 </n-tab-pane>
               </n-tabs>
@@ -57,25 +60,27 @@
 </template>
 
 <script setup>
-import {h, markRaw, onMounted, ref, shallowRef} from 'vue'
+import {h, onMounted, ref, shallowRef} from 'vue'
 import {
   darkTheme,
   lightTheme,
-  NConfigProvider, NIcon,
+  NConfigProvider,
+  NIcon,
   NLayout,
   NLayoutContent,
-  NLayoutHeader, NMenu,
+  NLayoutHeader,
   NMessageProvider,
   NTabPane,
   NTabs
 } from 'naive-ui'
-import {HomeOutline, SettingsOutline, RefreshOutline, MoonOutline, SunnyOutline,} from '@vicons/ionicons5'
+import {HomeOutline, SettingsOutline,} from '@vicons/ionicons5'
 import Header from './components/Header.vue'
 import Settings from './components/Settings.vue'
 import HelloWorld from './components/HelloWorld.vue'
 import SideMenu from "./components/SideMenu.vue";
 import {GetConfig} from "../wailsjs/go/config/AppConfig";
-import {WindowSetDarkTheme, WindowSetLightTheme, WindowSetSize} from "../wailsjs/runtime";
+import {WindowSetSize} from "../wailsjs/runtime";
+import {renderIcon} from "./utils/common";
 
 let Theme = shallowRef(lightTheme)
 let headerClass = shallowRef('lightTheme')
@@ -89,11 +94,9 @@ onMounted(async () => {
     if (loadedConfig.theme === 'light'){
       Theme.value = lightTheme
       headerClass = "lightTheme"
-      // WindowSetLightTheme()
     }else {
       Theme.value = darkTheme
       headerClass = "darkTheme"
-      // WindowSetDarkTheme()
     }
   }
 })
@@ -151,7 +154,6 @@ function handleMenuSelect(key, item) {
     openTabs.value.push(item);
   }
   activeTab.value = key;
-
 }
 
 // 递归查找子菜单中的项
@@ -187,15 +189,18 @@ function handleTabClose(key) {
   }
 }
 
-function renderIcon(icon) {
-  return () => h(NIcon, null, {default: () => h(icon)});
-}
 
-// 点击tab切换
+// 根据key切换
 function handleTabChange(key) {
   activeTab.value = key
 }
+// 根据index切换
+function handleTabChangeByIndex(index) {
+  // index转为int
+  activeTab.value = openTabs.value[parseInt(index)].key
+}
 
+// 主题切换
 function themeChange(newTheme) {
   console.log(newTheme.name)
   Theme.value = newTheme
@@ -203,11 +208,9 @@ function themeChange(newTheme) {
   if (newTheme === lightTheme){
     Theme.value = lightTheme
     headerClass = "lightTheme"
-    // WindowSetLightTheme()
   }else {
     Theme.value = darkTheme
     headerClass = "darkTheme"
-    // WindowSetDarkTheme()
   }
 }
 

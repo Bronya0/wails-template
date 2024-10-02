@@ -5,6 +5,7 @@
     <div class="input-box">
       <n-input v-model:value="data.name" type="text" placeholder="input name" class="input"/>
       <n-button type="info" @click="greet"> Greet </n-button>
+      <n-button type="info" @click="$emit('selectTab', data.name)"> Select </n-button>
     </div>
   </main>
 </template>
