@@ -37,8 +37,8 @@ jobs:
         with:
           name: Wails Build ${{runner.os}} ${{inputs.build-name}}
           path: |
-            */bin/
-            *\bin\*
+            ./app/build/bin/
+            ./app/build/bin/*
 
 #
 #      - name: Upload Release Asset
@@ -82,8 +82,8 @@ jobs:
         with:
           name: Wails Build ${{runner.os}} ${{inputs.build-name}}
           path: |
-            */bin/
-            *\bin\*
+            ./app/build/bin/
+            ./app/build/bin/*
 
 #      - name: Upload Release Asset
 #        id: upload-release-asset
@@ -131,8 +131,8 @@ jobs:
         with:
           name: Wails Build ${{runner.os}} ${{inputs.build-name}}
           path: |
-            */bin/
-            *\bin\*
+            ./app/build/bin/
+            ./app/build/bin/*
 #
 #      - name: Upload Release Asset
 #        id: upload-release-asset
