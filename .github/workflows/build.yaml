@@ -33,10 +33,6 @@ jobs:
           go-version: '1.22'
           package: false
 
-      - name: List Files in Directory
-        run: |
-          ls -la app/build/bin
-
       - name: Upload Release Asset
         id: upload-release-asset
         uses: actions/upload-release-asset@v1
@@ -45,7 +41,7 @@ jobs:
         with:
           upload_url: ${{ github.event.release.upload_url }}
           asset_path: app/build/bin/${{ matrix.build.name }}
-          asset_name: ${{ matrix.build.name }}-${{ github.event.release.tag_name }}-${{ matrix.build.platform }}.exe
+          asset_name: ${{ matrix.build.name }}-${{ matrix.build.os }}-${{ github.event.release.tag_name }}.exe
           asset_content_type: application/octet-stream
 
 
@@ -85,7 +81,7 @@ jobs:
         with:
           upload_url: ${{ github.event.release.upload_url }}
           asset_path: app/build/bin/${{ matrix.build.name }}.pkg
-          asset_name: ${{ matrix.build.name }}-${{ matrix.build.platform }}-${{ github.event.release.tag_name }}.pkg
+          asset_name: ${{ matrix.build.name }}-${{ matrix.build.os }}-${{ github.event.release.tag_name }}.pkg
           asset_content_type: application/octet-stream
 
       - name: Upload Release Asset
@@ -95,7 +91,7 @@ jobs:
         with:
           upload_url: ${{ github.event.release.upload_url }}
           asset_path: app/build/bin/${{ matrix.build.name }}.app.zip
-          asset_name: ${{ matrix.build.name }}-${{ matrix.build.platform }}-${{ github.event.release.tag_name }}.app.zip
+          asset_name: ${{ matrix.build.name }}-${{ matrix.build.os }}-${{ github.event.release.tag_name }}.app.zip
           asset_content_type: application/octet-stream
 
 
@@ -140,5 +136,5 @@ jobs:
         with:
           upload_url: ${{ github.event.release.upload_url }}
           asset_path: app/build/bin/${{ matrix.build.name }}.tar.gz
-          asset_name: ${{ matrix.build.name }}-${{ matrix.build.platform }}-${{ github.event.release.tag_name }}.tar.gz
+          asset_name: ${{ matrix.build.name }}-${{ matrix.build.os }}-${{ github.event.release.tag_name }}.tar.gz
           asset_content_type: application/octet-stream
