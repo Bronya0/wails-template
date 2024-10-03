@@ -30,13 +30,15 @@ jobs:
           app-working-directory: app
           build-name: ${{ matrix.build.name }}
           build-platform: ${{ matrix.build.platform }}
-          go-version: '1.22'
+          go-version: '1.23'
           package: false
+          nsis: false
 
       - name: Compress
         run: |
           copy README.md app\build\bin\
           copy LICENSE app\build\bin\
+          Rename-Item -Path app\build\bin\${{ matrix.build.name }} -NewName ${{ matrix.build.name }}.exe
           Compress-Archive -Path app\build\bin\* -DestinationPath ${{ matrix.build.name }}.zip -CompressionLevel Optimal
 
       - name: Upload Release Asset
@@ -72,7 +74,7 @@ jobs:
           app-working-directory: app
           build-name: ${{ matrix.build.name }}
           build-platform: ${{ matrix.build.platform }}
-          go-version: '1.22'
+          go-version: '1.23'
           package: false
 
       - name: List Files in Directory
@@ -121,7 +123,7 @@ jobs:
           app-working-directory: app
           build-name: ${{ matrix.build.name }}
           build-platform: ${{ matrix.build.platform }}
-          go-version: '1.22'
+          go-version: '1.23'
           package: false
 
       - name: List Files in Directory
@@ -130,8 +132,10 @@ jobs:
 
       - name: Package folder
         run: |
+          cp README.md app/build/bin/
+          cp LICENSE app/build/bin/
           cd app/build/bin
-          tar -czf ${{ matrix.build.name }}.tar.gz ${{ matrix.build.name }}
+          tar -czf ${{ matrix.build.name }}.tar.gz .
 
       - name: Upload Release Asset
         id: upload-release-asset
