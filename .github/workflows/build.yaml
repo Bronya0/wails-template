@@ -128,12 +128,12 @@ jobs:
 
       - name: move files
         run: |
-          cp readme.md app/build/bin/
-          cp LICENSE app/build/bin/
-          ls -la app/build/bin
-          cp -r app/build/bin/* _temp_dist
-          cd _temp_dist
-          tar -czf ${{ matrix.build.name }}.tar.gz .
+          mkdir _temp_dist
+          cp readme.md _temp_dist/
+          cp LICENSE _temp_dist/
+          cp -r app/build/bin/* _temp_dist/
+          ls -la _temp_dist/
+          tar -czf ${{ matrix.build.name }}.tar.gz _temp_dist/*
 
       - name: Upload Release Asset
         id: upload-release-asset
@@ -142,6 +142,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: app/build/bin/${{ matrix.build.name }}.tar.gz
+          asset_path: ${{ matrix.build.name }}.tar.gz
           asset_name: ${{ matrix.build.name }}-${{ github.event.release.tag_name }}-linux-amd64.tar.gz
           asset_content_type: application/octet-stream
