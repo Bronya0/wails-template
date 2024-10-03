@@ -12,7 +12,7 @@
       </n-form-item>
 
       <n-form-item label="主题">
-        <n-space>
+        <n-flex>
           <n-button strong  @click="theme=darkTheme">
             dark
           </n-button>
@@ -20,7 +20,7 @@
             light
           </n-button>
 
-        </n-space>
+        </n-flex>
       </n-form-item>
 
 

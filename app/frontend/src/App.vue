@@ -3,12 +3,15 @@
     <n-message-provider>
       <n-layout has-sider>
         <n-layout>
-          <n-layout-header :class="headerClass" bordered
-                           style="height: 6dvh; padding: 0 20px 0 0; --wails-draggable:drag">
 
-            <Header :options="menuOptions"  @select="handleMenuSelect"/>
+            <n-notification-provider placement="bottom-right">
+              <n-layout-header :class="headerClass" bordered
+                               style="height: 6dvh; padding: 0 20px 0 0; --wails-draggable:drag">
+              <Header :options="menuOptions" @select="handleMenuSelect"/>
+              </n-layout-header>
+            </n-notification-provider>
 
-          </n-layout-header>
+
 
           <n-layout has-sider style="height: 94dvh;">
             <n-layout-sider
@@ -36,10 +39,10 @@
                 <n-tab-pane v-for="tab in openTabs" :key="tab.key" :name="tab.key" display-directive="show"
                             :closable="openTabs.length > 1">
                   <template #tab>
-                    <n-space align="center">
+                    <n-flex align="center">
                       <n-icon :component="tab.tab_icon"/>
                       {{ tab.label }}
-                    </n-space>
+                    </n-flex>
                   </template>
 
                   <div class="tab-content">
@@ -91,10 +94,10 @@ onMounted(async () => {
   const loadedConfig = await GetConfig()
   if (loadedConfig) {
     await WindowSetSize(loadedConfig.width, loadedConfig.height)
-    if (loadedConfig.theme === 'light'){
+    if (loadedConfig.theme === 'light') {
       Theme.value = lightTheme
       headerClass = "lightTheme"
-    }else {
+    } else {
       Theme.value = darkTheme
       headerClass = "darkTheme"
     }
@@ -109,7 +112,13 @@ const menuOptions = [
     icon: renderIcon(HomeOutline),
     tab_icon: HomeOutline,
     children: [
-      {label: 'HelloWorld', key: 'HelloWorld', icon: renderIcon(HomeOutline), tab_icon: HomeOutline, component: HelloWorld},
+      {
+        label: 'HelloWorld',
+        key: 'HelloWorld',
+        icon: renderIcon(HomeOutline),
+        tab_icon: HomeOutline,
+        component: HelloWorld
+      },
     ]
   },
   {
@@ -118,7 +127,13 @@ const menuOptions = [
     icon: renderIcon(SettingsOutline),
     tab_icon: SettingsOutline,
     children: [
-      {label: 'Settings', key: 'Settings', icon: renderIcon(SettingsOutline), tab_icon: SettingsOutline, component: Settings},
+      {
+        label: 'Settings',
+        key: 'Settings',
+        icon: renderIcon(SettingsOutline),
+        tab_icon: SettingsOutline,
+        component: Settings
+      },
     ]
   },
 ]
@@ -194,6 +209,7 @@ function handleTabClose(key) {
 function handleTabChange(key) {
   activeTab.value = key
 }
+
 // 根据index切换
 function handleTabChangeByIndex(index) {
   // index转为int
@@ -205,10 +221,10 @@ function themeChange(newTheme) {
   console.log(newTheme.name)
   Theme.value = newTheme
   headerClass = newTheme === lightTheme ? "lightTheme" : "darkTheme"
-  if (newTheme === lightTheme){
+  if (newTheme === lightTheme) {
     Theme.value = lightTheme
     headerClass = "lightTheme"
-  }else {
+  } else {
     Theme.value = darkTheme
     headerClass = "darkTheme"
   }

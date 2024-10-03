@@ -3,6 +3,7 @@
     <div class="left-section">
       <n-avatar size="small" :src="logo"/>
       <h1 class="title">测试APP</h1>
+      <n-h5>    {{version.tag_name}}</n-h5>
     </div>
     <div class="right-section">
       <n-menu mode="horizontal" :options="props.options" @update:value="handleSelect"/>
@@ -31,16 +32,14 @@
 </template>
 
 <script setup>
-import {
-  NMenu, NButton, NIcon, NAvatar
-} from 'naive-ui'
-import {
-  RefreshOutline,
-} from '@vicons/ionicons5'
+import {NAvatar, NButton, NIcon, NMenu} from 'naive-ui'
+import {RefreshOutline,} from '@vicons/ionicons5'
 import logo from '../assets/images/logo.svg'
+import {onMounted, ref, shallowRef} from "vue";
 // import {ref} from "vue";
 // import {Quit, WindowMaximise, WindowMinimise, WindowUnmaximise} from "../../wailsjs/runtime";
-
+import {CheckUpdate} from '../../wailsjs/go/system/Update'
+import { useNotification } from 'naive-ui'
 
 const props = defineProps({
   options: {
@@ -50,16 +49,31 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['select'])
+let version = ref({
+  tag_name: "1.0.0",
+  body: "",
+})
 
+const notification = useNotification()
 
 const handleSelect = (key, item) => {
   emit('select', key, item)
 }
 
-const checkForUpdates = () => {
-  console.log('Checking for updates...')
+const checkForUpdates = async () => {
+  console.info("check version……")
+  version.value = await CheckUpdate()
+  console.info(version.value)
+  notification.info({
+    title: '更新提示',
+    content: version.value.body,
+  })
 }
 
+onMounted(async () => {
+  await checkForUpdates()
+
+})
 
 // const isMaximized = ref(false);
 //

@@ -3,6 +3,7 @@ package main
 import (
 	"app/backend/common"
 	"app/backend/config"
+	"app/backend/system"
 	"context"
 	"embed"
 	"fmt"
@@ -28,6 +29,7 @@ func main() {
 	app := NewApp()
 	appConfig := &config.AppConfig{}
 	configInfo := appConfig.GetConfig()
+	update := &system.Update{}
 
 	// 主应用程序由对 wails.Run() 的调用组成。 它接受描述应用程序窗口大小、窗口标题、要使用的资源等应用程序配置
 	// 完整说明：https://wails.io/zh-Hans/docs/reference/options/
@@ -55,6 +57,7 @@ func main() {
 		OnStartup: func(ctx context.Context) {
 			app.Start(ctx)
 			appConfig.Start(ctx)
+			update.Start(ctx)
 		},
 		//在前端加载完毕 index.html 及其资源后调用此回调
 		OnDomReady: app.domReady,
@@ -67,6 +70,7 @@ func main() {
 		Bind: []interface{}{
 			app,
 			appConfig,
+			update,
 		},
 		Windows: &windows.Options{
 			WebviewIsTransparent:              false,
