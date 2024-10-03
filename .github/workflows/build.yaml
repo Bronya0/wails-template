@@ -133,7 +133,8 @@ jobs:
           cp LICENSE _temp_dist/
           cp -r app/build/bin/* _temp_dist/
           ls -la _temp_dist/
-          tar -czf ${{ matrix.build.name }}.tar.gz _temp_dist/*
+          cd _temp_dist/
+          tar -czf ${{ matrix.build.name }}.tar.gz .
 
       - name: Upload Release Asset
         id: upload-release-asset
