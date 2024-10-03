@@ -7,7 +7,8 @@ var (
 const (
 	AppName    = "测试APP"
 	Width      = 1280
-	Height     = 720
+	Height     = 768
 	Theme      = "dark"
-	ConfigPath = "config.json"
+	ConfigPath = "config.yaml"
+	Language   = "zh"
 )

@@ -3,8 +3,8 @@ package config
 import (
 	"app/backend/common"
 	"context"
-	"encoding/json"
 	"fmt"
+	"gopkg.in/yaml.v3"
 	"os"
 	"path/filepath"
 )
@@ -29,37 +29,29 @@ func (a *AppConfig) GetConfig() *Config {
 	defaultConfig := &Config{
 		Width:    common.Width,
 		Height:   common.Height,
-		Language: "zh",
+		Language: common.Language,
 		Theme:    common.Theme,
 	}
-
 	data, err := os.ReadFile(configPath)
 	if err != nil {
 		return defaultConfig
 	}
-
-	var config Config
-	err = json.Unmarshal(data, &config)
+	err = yaml.Unmarshal(data, &defaultConfig)
 	if err != nil {
 		return defaultConfig
 	}
-
-	return &config
+	return defaultConfig
 }
 
 func (a *AppConfig) SaveConfig(config *Config) string {
 	configPath := a.getConfigPath()
 	fmt.Println(configPath)
 
-	data, err := json.Marshal(config)
+	data, err := yaml.Marshal(config)
 	if err != nil {
 		return err.Error()
 	}
 
-	err = os.MkdirAll(filepath.Dir(configPath), 0755)
-	if err != nil {
-		return err.Error()
-	}
 	err = os.WriteFile(configPath, data, 0644)
 	if err != nil {
 		return err.Error()

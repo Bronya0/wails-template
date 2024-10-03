@@ -34,7 +34,7 @@
 </template>
 
 <script setup>
-import {onActivated, onBeforeUnmount, onMounted, ref} from 'vue'
+import {onMounted, ref} from 'vue'
 import {darkTheme, lightTheme, NButton, NForm, NFormItem, NInputNumber, NSelect, useMessage} from 'naive-ui'
 import {GetConfig, SaveConfig} from '../../wailsjs/go/config/AppConfig'
 import {WindowSetSize} from "../../wailsjs/runtime";
