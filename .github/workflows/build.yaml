@@ -130,10 +130,13 @@ jobs:
         run: |
           ls -la app/build/bin
 
-      - name: Package folder
+      - name: move files
         run: |
           cp readme.md app/build/bin/
           cp LICENSE app/build/bin/
+
+      - name: tar gz
+        run: |
           cd app/build/bin
           tar -czf ${{ matrix.build.name }}.tar.gz .
 
