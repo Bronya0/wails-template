@@ -36,7 +36,7 @@ jobs:
 
       - name: Compress
         run: |
-          copy README.md app\build\bin\
+          copy readme.md app\build\bin\
           copy LICENSE app\build\bin\
           Rename-Item -Path app\build\bin\${{ matrix.build.name }} -NewName ${{ matrix.build.name }}.exe
           Compress-Archive -Path app\build\bin\* -DestinationPath ${{ matrix.build.name }}.zip -CompressionLevel Optimal
@@ -132,7 +132,7 @@ jobs:
 
       - name: Package folder
         run: |
-          cp README.md app/build/bin/
+          cp readme.md app/build/bin/
           cp LICENSE app/build/bin/
           cd app/build/bin
           tar -czf ${{ matrix.build.name }}.tar.gz .
