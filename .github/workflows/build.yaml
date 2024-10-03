@@ -131,10 +131,8 @@ jobs:
           cp readme.md app/build/bin/
           cp LICENSE app/build/bin/
           ls -la app/build/bin
-
-      - name: tar gz
-        run: |
-          cd app/build/bin
+          cp -r app/build/bin/* _temp_dist
+          cd _temp_dist
           tar -czf ${{ matrix.build.name }}.tar.gz .
 
       - name: Upload Release Asset
