@@ -2,6 +2,7 @@ package config
 
 import (
 	"app/backend/common"
+	"app/backend/types"
 	"context"
 	"fmt"
 	"gopkg.in/yaml.v3"
@@ -13,20 +14,13 @@ type AppConfig struct {
 	ctx context.Context
 }
 
-type Config struct {
-	Width    int    `json:"width"`
-	Height   int    `json:"height"`
-	Language string `json:"language"`
-	Theme    string `json:"theme"`
-}
-
 func (a *AppConfig) Start(ctx context.Context) {
 	a.ctx = ctx
 }
 
-func (a *AppConfig) GetConfig() *Config {
+func (a *AppConfig) GetConfig() *types.Config {
 	configPath := a.getConfigPath()
-	defaultConfig := &Config{
+	defaultConfig := &types.Config{
 		Width:    common.Width,
 		Height:   common.Height,
 		Language: common.Language,
@@ -43,7 +37,7 @@ func (a *AppConfig) GetConfig() *Config {
 	return defaultConfig
 }
 
-func (a *AppConfig) SaveConfig(config *Config) string {
+func (a *AppConfig) SaveConfig(config *types.Config) string {
 	configPath := a.getConfigPath()
 	fmt.Println(configPath)
 

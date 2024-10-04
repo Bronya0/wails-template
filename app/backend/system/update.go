@@ -2,6 +2,7 @@ package system
 
 import (
 	"app/backend/common"
+	"app/backend/types"
 	"context"
 	"github.com/go-resty/resty/v2"
 )
@@ -9,17 +10,13 @@ import (
 type Update struct {
 	ctx context.Context
 }
-type Tag struct {
-	TagName string `json:"tag_name"`
-	Body    string `json:"body"`
-}
 
 func (obj *Update) Start(ctx context.Context) {
 	obj.ctx = ctx
 }
-func (obj *Update) CheckUpdate() *Tag {
+func (obj *Update) CheckUpdate() *types.Tag {
 	client := resty.New()
-	tag := &Tag{}
+	tag := &types.Tag{}
 	_, _ = client.R().SetResult(tag).Get(common.UPDATE_URL)
 	return tag
 }
