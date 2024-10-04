@@ -32,18 +32,20 @@
               <n-tabs
                   type="card"
                   animated
+                  size="small"
                   :value="activeTab"
                   @update:value="handleTabChange"
                   @close="handleTabClose"
               >
+
                 <n-tab-pane v-for="tab in openTabs" :key="tab.key" :name="tab.key" display-directive="show"
                             :closable="openTabs.length > 1">
-                  <template #tab>
-                    <n-flex align="center">
-                      <n-icon :component="tab.tab_icon"/>
-                      {{ tab.label }}
-                    </n-flex>
-                  </template>
+<!--                  <template #tab>-->
+<!--                    <n-flex align="center">-->
+<!--                      <n-icon :component="tab.tab_icon"/>-->
+<!--                      {{ tab.label }}-->
+<!--                    </n-flex>-->
+<!--                  </template>-->
 
                   <div class="tab-content">
                     <component :is="tab.component" :name="tab.label" :key="tab.key"
@@ -63,7 +65,7 @@
 </template>
 
 <script setup>
-import {h, onMounted, ref, shallowRef} from 'vue'
+import {computed, h, onMounted, ref, shallowRef} from 'vue'
 import {
   darkTheme,
   lightTheme,
@@ -74,7 +76,7 @@ import {
   NLayoutHeader,
   NMessageProvider,
   NTabPane,
-  NTabs
+  NTabs, useOsTheme
 } from 'naive-ui'
 import {HomeOutline, SettingsOutline,} from '@vicons/ionicons5'
 import Header from './components/Header.vue'
@@ -85,7 +87,6 @@ import {GetConfig} from "../wailsjs/go/config/AppConfig";
 import {WindowSetSize} from "../wailsjs/runtime";
 import {renderIcon} from "./utils/common";
 
-let Theme = shallowRef(lightTheme)
 let headerClass = shallowRef('lightTheme')
 const collapsed = shallowRef(true)
 
@@ -104,7 +105,7 @@ onMounted(async () => {
   }
 })
 
-// 菜单
+// 顶部菜单
 const menuOptions = [
   {
     label: '首页',
@@ -116,7 +117,66 @@ const menuOptions = [
         label: 'HelloWorld',
         key: 'HelloWorld',
         icon: renderIcon(HomeOutline),
-        tab_icon: HomeOutline,
+        component: HelloWorld
+      },
+      {
+        label: 'HelloWorld',
+        key: 'HelloWorld1',
+        icon: renderIcon(HomeOutline),
+        component: HelloWorld
+      },
+      {
+        label: 'HelloWorld',
+        key: 'HelloWorld2',
+        icon: renderIcon(HomeOutline),
+        component: HelloWorld
+      },
+      {
+        label: 'HelloWorld',
+        key: 'HelloWorld3',
+        icon: renderIcon(HomeOutline),
+        component: HelloWorld
+      },
+      {
+        label: 'HelloWorld',
+        key: 'HelloWorld4',
+        icon: renderIcon(HomeOutline),
+        component: HelloWorld
+      },
+      {
+        label: 'HelloWorld',
+        key: 'HelloWorld5',
+        icon: renderIcon(HomeOutline),
+        component: HelloWorld
+      },
+      {
+        label: 'HelloWorld',
+        key: 'HelloWorld6',
+        icon: renderIcon(HomeOutline),
+        component: HelloWorld
+      },
+      {
+        label: 'HelloWorld',
+        key: 'HelloWorld7',
+        icon: renderIcon(HomeOutline),
+        component: HelloWorld
+      },
+      {
+        label: 'HelloWorld',
+        key: 'HelloWorld8',
+        icon: renderIcon(HomeOutline),
+        component: HelloWorld
+      },
+      {
+        label: 'HelloWorld',
+        key: 'HelloWorld9',
+        icon: renderIcon(HomeOutline),
+        component: HelloWorld
+      },
+      {
+        label: 'HelloWorld',
+        key: 'HelloWorld10',
+        icon: renderIcon(HomeOutline),
         component: HelloWorld
       },
     ]
@@ -125,32 +185,29 @@ const menuOptions = [
     label: '设置',
     key: 'Settings',
     icon: renderIcon(SettingsOutline),
-    tab_icon: SettingsOutline,
     children: [
       {
         label: 'Settings',
         key: 'Settings',
         icon: renderIcon(SettingsOutline),
-        tab_icon: SettingsOutline,
         component: Settings
       },
     ]
   },
 ]
 
+// 左侧菜单
 const sideMenuOptions = [
   {
     label: '主页',
     key: 'HelloWorld3',
     icon: renderIcon(HomeOutline),
-    tab_icon: HomeOutline,
     component: HelloWorld
   },
   {
     label: '设置',
     key: 'Settings4',
     icon: renderIcon(SettingsOutline),
-    tab_icon: SettingsOutline,
     component: Settings
   },
 ]
@@ -216,19 +273,17 @@ function handleTabChangeByIndex(index) {
   activeTab.value = openTabs.value[parseInt(index)].key
 }
 
+
+let Theme = shallowRef(lightTheme)
+
 // 主题切换
 function themeChange(newTheme) {
   console.log(newTheme.name)
   Theme.value = newTheme
   headerClass = newTheme === lightTheme ? "lightTheme" : "darkTheme"
-  if (newTheme === lightTheme) {
-    Theme.value = lightTheme
-    headerClass = "lightTheme"
-  } else {
-    Theme.value = darkTheme
-    headerClass = "darkTheme"
-  }
 }
+
+
 
 
 </script>

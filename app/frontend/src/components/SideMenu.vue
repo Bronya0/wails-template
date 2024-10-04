@@ -1,4 +1,5 @@
 <template>
+<!--  https://www.naiveui.com/zh-CN/os-theme/components/menu -->
   <n-menu
       :collapsed-width="64"
       :collapsed-icon-size="22"
