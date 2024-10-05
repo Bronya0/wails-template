@@ -6,7 +6,7 @@
       <n-h5>    {{version.tag_name}}</n-h5>
     </div>
     <div class="right-section">
-      <n-menu mode="horizontal" :options="props.options" @update:value="handleSelect"/>
+      <n-menu mode="horizontal" :value="props.value" :options="props.options" @update:value="handleSelect"/>
       <n-button text @click="checkForUpdates">
         <template #icon>
           <n-icon>
@@ -42,10 +42,8 @@ import {CheckUpdate} from '../../wailsjs/go/system/Update'
 import { useNotification } from 'naive-ui'
 
 const props = defineProps({
-  options: {
-    type: Array,
-    required: true
-  }
+  options: {},
+  value: {}
 });
 
 const emit = defineEmits(['select'])

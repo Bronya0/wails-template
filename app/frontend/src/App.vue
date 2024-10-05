@@ -7,7 +7,8 @@
             <n-notification-provider placement="bottom-right">
               <n-layout-header :class="headerClass" bordered
                                style="height: 6dvh; padding: 0 20px 0 0; --wails-draggable:drag">
-              <Header :options="menuOptions" @select="handleMenuSelect"/>
+
+              <Header :value="activeTab" :options="menuOptions" @select="handleMenuSelect"/>
               </n-layout-header>
             </n-notification-provider>
 
@@ -24,8 +25,14 @@
                 @collapse="collapsed = true"
                 @expand="collapsed = false"
             >
-              <SideMenu @select="handleMenuSelect" :options="sideMenuOptions"/>
-
+              <n-menu
+                  :collapsed-width="64"
+                  :collapsed-icon-size="22"
+                  :mode="'vertical'"
+                  :value="activeTab"
+                  @select="handleMenuSelect"
+                  :options="sideMenuOptions"
+              />
             </n-layout-sider>
 
             <n-layout-content>
@@ -73,7 +80,7 @@ import {
   NIcon,
   NLayout,
   NLayoutContent,
-  NLayoutHeader,
+  NLayoutHeader, NMenu,
   NMessageProvider,
   NTabPane,
   NTabs, useOsTheme
@@ -82,7 +89,6 @@ import {HomeOutline, SettingsOutline,} from '@vicons/ionicons5'
 import Header from './components/Header.vue'
 import Settings from './components/Settings.vue'
 import HelloWorld from './components/HelloWorld.vue'
-import SideMenu from "./components/SideMenu.vue";
 import {GetConfig} from "../wailsjs/go/config/AppConfig";
 import {WindowSetSize} from "../wailsjs/runtime";
 import {renderIcon} from "./utils/common";
