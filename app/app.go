@@ -1,6 +1,7 @@
 package main
 
 import (
+	"app/backend/common"
 	"context"
 	"fmt"
 )
@@ -22,7 +23,7 @@ func (a *App) Start(ctx context.Context) {
 }
 
 // domReady is called after front-end resources have been loaded
-func (a App) domReady(ctx context.Context) {
+func (a *App) domReady(ctx context.Context) {
 	// Add your action here
 }
 
@@ -41,4 +42,9 @@ func (a *App) shutdown(ctx context.Context) {
 // Greet returns a greeting for the given name
 func (a *App) Greet(name string) string {
 	return fmt.Sprintf("Hello %s, It's show time!", name)
+}
+
+// GetVersion returns the application version
+func (a *App) GetVersion() string {
+	return common.Version
 }

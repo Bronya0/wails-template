@@ -8,5 +8,12 @@
   "author": {
     "name": "bronya0",
     "email": "tangssst@qq.com"
+  },
+  "info": {
+    "companyName": "bronya0",
+    "productName": "demo-app",
+    "productVersion": "1.0.0",
+    "copyright": "Copyright © 2024",
+    "comments": "demo-app comments"
   }
 }

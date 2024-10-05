@@ -3,7 +3,8 @@ package common
 import "fmt"
 
 var (
-	Version = "0.0.1"
+	// Version 会在编译时注入 -ldflags="-X 'app/backend/common.Version=${{ github.event.release.tag_name }}'"
+	Version = ""
 )
 
 const (

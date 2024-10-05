@@ -8,7 +8,7 @@
               <n-layout-header :class="headerClass" bordered
                                style="height: 6dvh; padding: 0 20px 0 0; --wails-draggable:drag">
 
-              <Header :value="activeTab" :options="menuOptions" @select="handleMenuSelect"/>
+              <Header :value="activeTab" :options="menuOptions" @update:value="handleMenuSelect"/>
               </n-layout-header>
             </n-notification-provider>
 
@@ -30,7 +30,7 @@
                   :collapsed-icon-size="22"
                   :mode="'vertical'"
                   :value="activeTab"
-                  @select="handleMenuSelect"
+                  @update:value="handleMenuSelect"
                   :options="sideMenuOptions"
               />
             </n-layout-sider>

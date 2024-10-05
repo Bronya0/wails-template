@@ -6,6 +6,10 @@ on:
 
 env:
   NODE_OPTIONS: "--max-old-space-size=4096"
+  APP_NAME: 'demo-app'
+  APP_WORKING_DIRECTORY: 'app'
+  GO_VERSION: '1.23'
+  NODE_VERSION: "20.x"
 
 jobs:
   build-windows:
@@ -13,9 +17,7 @@ jobs:
     strategy:
       matrix:
         build:
-          - name: 'demo-app'
-            platform: 'windows/amd64'
-            os: 'windows-latest'
+          - platform: 'windows/amd64'
 
     steps:
       - name: Checkout
@@ -23,32 +25,33 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Build wails
-        uses: dAppServer/wails-build-action@v2.2
-        id: build
+      - name: GoLang
+        uses: actions/setup-go@v4
         with:
-          app-working-directory: app
-          build-name: ${{ matrix.build.name }}
-          build-platform: ${{ matrix.build.platform }}
-          go-version: '1.23'
-          package: false
-          nsis: false
+          check-latest: true
+          go-version: ${{ env.GO_VERSION }}
 
-      - name: Compress
+      - name: NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Build & Compress
         run: |
+          go install github.com/wailsapp/wails/v2/cmd/wails@latest
+          wails build -ldflags="-X 'app/backend/common.Version=${{ github.event.release.tag_name }}'" --platform ${{ matrix.build.platform }} -webview2 download -o ${{ env.APP_NAME }}.exe
           copy readme.md app\build\bin\
           copy LICENSE app\build\bin\
-          Rename-Item -Path app\build\bin\${{ matrix.build.name }} -NewName ${{ matrix.build.name }}.exe
-          Compress-Archive -Path app\build\bin\* -DestinationPath ${{ matrix.build.name }}.zip -CompressionLevel Optimal
+          Compress-Archive -Path app\build\bin\* -DestinationPath ${{ env.APP_NAME }}.zip -CompressionLevel Optimal
 
-      - name: Upload Release Asset
+      - name: Upload
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ${{ matrix.build.name }}.zip
-          asset_name: ${{ matrix.build.name }}-${{ github.event.release.tag_name }}-windows-amd64.zip
+          asset_path: ${{ env.APP_NAME }}.zip
+          asset_name: ${{ env.APP_NAME }}-${{ github.event.release.tag_name }}-windows-amd64.zip
           asset_content_type: application/octet-stream
 
 
@@ -57,9 +60,7 @@ jobs:
     strategy:
       matrix:
         build:
-          - name: 'demo-app'
-            platform: 'darwin/universal'
-            os: 'macos-latest'
+          - platform: 'darwin/universal'
 
     steps:
       - name: Checkout
@@ -67,38 +68,45 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Build wails
-        uses: dAppServer/wails-build-action@v2.2
-        id: build
+      - name: GoLang
+        uses: actions/setup-go@v4
         with:
-          app-working-directory: app
-          build-name: ${{ matrix.build.name }}
-          build-platform: ${{ matrix.build.platform }}
-          go-version: '1.23'
-          package: false
+          check-latest: true
+          go-version: ${{ env.GO_VERSION }}
 
-      - name: List Files in Directory
+      - name: NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Build & Compress
+        working-directory: ${{ env.APP_WORKING_DIRECTORY }}
         run: |
-          ls -la app/build/bin
+          go install github.com/wailsapp/wails/v2/cmd/wails@latest
+          brew install mitchellh/gon/gon
+          wails build -ldflags "-X 'app/backend/common.Version=${{ github.event.release.tag_name }}'" --platform ${{ matrix.build.platform }} -o ${{ env.APP_NAME }} 
+          chmod +x build/bin/*/Contents/MacOS/*
+          ditto -c -k ./build/bin/${{ env.APP_NAME }}.app ./build/bin/${{ env.APP_NAME }}.app.zip
+          productbuild --component ./build/bin/${{ env.APP_NAME }}.app ./build/bin/${{ env.APP_NAME }}.pkg
 
-      - name: Upload Release Asset
+      - name: Upload pkg
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: app/build/bin/${{ matrix.build.name }}.pkg
-          asset_name: ${{ matrix.build.name }}-${{ github.event.release.tag_name }}-macos.pkg
+          asset_path: app/build/bin/${{ env.APP_NAME }}.pkg
+          asset_name: ${{ env.APP_NAME }}-${{ github.event.release.tag_name }}-macos.pkg
           asset_content_type: application/octet-stream
 
-      - name: Upload Release Asset
+      - name: Upload zip
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: app/build/bin/${{ matrix.build.name }}.app.zip
-          asset_name: ${{ matrix.build.name }}-${{ github.event.release.tag_name }}-macos.app.zip
+          asset_path: app/build/bin/${{ env.APP_NAME }}.app.zip
+          asset_name: ${{ env.APP_NAME }}-${{ github.event.release.tag_name }}-macos.app.zip
           asset_content_type: application/octet-stream
 
 
@@ -107,42 +115,46 @@ jobs:
     strategy:
       matrix:
         build:
-          - name: 'demo-app'
-            platform: 'linux/amd64'
-            os: 'ubuntu-latest'
+          - platform: 'linux/amd64'
+
     steps:
       - name: Checkout
         uses: actions/checkout@v2
         with:
           submodules: recursive
 
-      - name: Build wails
-        uses: dAppServer/wails-build-action@v2.2
-        id: build
+      - name: GoLang
+        uses: actions/setup-go@v4
         with:
-          app-working-directory: app
-          build-name: ${{ matrix.build.name }}
-          build-platform: ${{ matrix.build.platform }}
-          go-version: '1.23'
-          package: false
+          check-latest: true
+          go-version: ${{ env.GO_VERSION }}
 
-      - name: move files
+      - name: NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Build & Compress
         run: |
+          go install github.com/wailsapp/wails/v2/cmd/wails@latest
+          sudo apt-get update && sudo apt-get install libgtk-3-0 libwebkit2gtk-4.0-dev gcc-aarch64-linux-gnu
+          wails build -ldflags="-X 'app/backend/common.Version=${{ github.event.release.tag_name }}'" --platform ${{ matrix.build.platform }} -webview2 download -o ${{ env.APP_NAME }}
           mkdir _temp_dist
           cp readme.md _temp_dist/
           cp LICENSE _temp_dist/
           cp -r app/build/bin/* _temp_dist/
+          chmod +x _temp_dist/*
           cd _temp_dist/
-          tar -zcvf ${{ matrix.build.name }}.tar.gz *
-          mv ${{ matrix.build.name }}.tar.gz ..
+          tar -zcvf ${{ env.APP_NAME }}.tar.gz *
+          mv ${{ env.APP_NAME }}.tar.gz ..
 
-      - name: Upload Release Asset
+      - name: Upload tar.gz
         id: upload-release-asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ${{ matrix.build.name }}.tar.gz
-          asset_name: ${{ matrix.build.name }}-${{ github.event.release.tag_name }}-linux-amd64.tar.gz
+          asset_path: ${{ env.APP_NAME }}.tar.gz
+          asset_name: ${{ env.APP_NAME }}-${{ github.event.release.tag_name }}-linux-amd64.tar.gz
           asset_content_type: application/octet-stream

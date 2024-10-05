@@ -39,6 +39,7 @@ import {onMounted, ref, shallowRef} from "vue";
 // import {ref} from "vue";
 // import {Quit, WindowMaximise, WindowMinimise, WindowUnmaximise} from "../../wailsjs/runtime";
 import {CheckUpdate} from '../../wailsjs/go/system/Update'
+import {GetVersion} from '../../wailsjs/go/main/App'
 import { useNotification } from 'naive-ui'
 
 const props = defineProps({
@@ -48,7 +49,7 @@ const props = defineProps({
 
 const emit = defineEmits(['select'])
 let version = ref({
-  tag_name: "1.0.0",
+  tag_name: "",
   body: "",
 })
 
@@ -60,12 +61,16 @@ const handleSelect = (key, item) => {
 
 const checkForUpdates = async () => {
   console.info("check version……")
-  version.value = await CheckUpdate()
-  console.info(version.value)
-  notification.info({
-    title: '更新提示',
-    content: version.value.body,
-  })
+  version.value.tag_name = await GetVersion()
+  console.info(version.value.tag_name)
+  const resp = await CheckUpdate()
+  console.info(resp)
+  if (resp.tag_name !== version.value.tag_name){
+    notification.info({
+      title: '发现新版本' + resp.tag_name,
+      content: version.value.body,
+    })
+  }
 }
 
 onMounted(async () => {
