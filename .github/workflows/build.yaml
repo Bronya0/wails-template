@@ -39,7 +39,9 @@ jobs:
       - name: Build & Compress
         run: |
           go install github.com/wailsapp/wails/v2/cmd/wails@latest
+          cd ${{ env.APP_WORKING_DIRECTORY }}
           wails build -ldflags="-X 'app/backend/common.Version=${{ github.event.release.tag_name }}'" --platform ${{ matrix.build.platform }} -webview2 download -o ${{ env.APP_NAME }}.exe
+          cd ..
           copy readme.md app\build\bin\
           copy LICENSE app\build\bin\
           Compress-Archive -Path app\build\bin\* -DestinationPath ${{ env.APP_NAME }}.zip -CompressionLevel Optimal
@@ -80,10 +82,10 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
 
       - name: Build & Compress
-        working-directory: ${{ env.APP_WORKING_DIRECTORY }}
         run: |
           go install github.com/wailsapp/wails/v2/cmd/wails@latest
           brew install mitchellh/gon/gon
+          cd ${{ env.APP_WORKING_DIRECTORY }}
           wails build -ldflags "-X 'app/backend/common.Version=${{ github.event.release.tag_name }}'" --platform ${{ matrix.build.platform }} -o ${{ env.APP_NAME }} 
           chmod +x build/bin/*/Contents/MacOS/*
           ditto -c -k ./build/bin/${{ env.APP_NAME }}.app ./build/bin/${{ env.APP_NAME }}.app.zip
@@ -95,7 +97,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: app/build/bin/${{ env.APP_NAME }}.pkg
+          asset_path: ${{ env.APP_WORKING_DIRECTORY }}/build/bin/${{ env.APP_NAME }}.pkg
           asset_name: ${{ env.APP_NAME }}-${{ github.event.release.tag_name }}-macos.pkg
           asset_content_type: application/octet-stream
 
@@ -105,7 +107,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: app/build/bin/${{ env.APP_NAME }}.app.zip
+          asset_path: ${{ env.APP_WORKING_DIRECTORY }}/build/bin/${{ env.APP_NAME }}.app.zip
           asset_name: ${{ env.APP_NAME }}-${{ github.event.release.tag_name }}-macos.app.zip
           asset_content_type: application/octet-stream
 
@@ -138,11 +140,13 @@ jobs:
         run: |
           go install github.com/wailsapp/wails/v2/cmd/wails@latest
           sudo apt-get update && sudo apt-get install libgtk-3-0 libwebkit2gtk-4.0-dev gcc-aarch64-linux-gnu
+          cd ${{ env.APP_WORKING_DIRECTORY }}
           wails build -ldflags="-X 'app/backend/common.Version=${{ github.event.release.tag_name }}'" --platform ${{ matrix.build.platform }} -webview2 download -o ${{ env.APP_NAME }}
+          cd ..
           mkdir _temp_dist
           cp readme.md _temp_dist/
           cp LICENSE _temp_dist/
-          cp -r app/build/bin/* _temp_dist/
+          cp -r ${{ env.APP_WORKING_DIRECTORY }}/build/bin/* _temp_dist/
           chmod +x _temp_dist/*
           cd _temp_dist/
           tar -zcvf ${{ env.APP_NAME }}.tar.gz *
