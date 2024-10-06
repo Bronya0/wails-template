@@ -1,11 +1,11 @@
 <template>
   <n-config-provider :theme="Theme">
     <n-message-provider>
-      <n-layout has-sider>
+      <n-layout has-sider  :class="headerClass">
         <n-layout>
 
           <n-notification-provider placement="bottom-right">
-            <n-layout-header :class="headerClass" bordered
+            <n-layout-header bordered
                              style="height: 6dvh; padding: 0;  --wails-draggable:drag">
 
               <Header :value="activeTab" :options="menuOptions" @update:value="handleMenuSelect"/>
