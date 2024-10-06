@@ -7,25 +7,17 @@
     </div>
     <div class="right-section">
       <n-menu mode="horizontal" :value="props.value" :options="props.options" @update:value="handleSelect"/>
-      <n-button text @click="checkForUpdates">
+      <n-button quaternary :loading="loading" @click="checkForUpdates">
         <template #icon>
           <n-icon>
-            <refresh-outline/>
+            <RefreshOutline/>
           </n-icon>
         </template>
-        更新
       </n-button>
 
-<!--      <n-button quaternary  :focusable="false" @click="minimizeWindow" :render-icon="renderIcon(Remove)" style="margin-left: 8px"/>-->
-<!--      <n-button quaternary  :focusable="false" @click="resizeWindow">-->
-<!--        <template #icon>-->
-<!--          <n-icon size="16px">-->
-<!--            <SquareOutline v-if="!isMaximized"/>-->
-<!--            <CopyOutline v-else/>-->
-<!--          </n-icon>-->
-<!--        </template>-->
-<!--      </n-button>-->
-<!--      <n-button quaternary  :focusable="false" @click="closeWindow" :render-icon="renderIcon(Close)" />-->
+      <n-button  quaternary :focusable="false" @click="minimizeWindow" :render-icon="renderIcon(Remove)" />
+      <n-button   quaternary :focusable="false" @click="resizeWindow" :render-icon="renderIcon(MaxMinIcon)" />
+      <n-button  quaternary :focusable="false" @click="closeWindow" :render-icon="renderIcon(Close)" style="margin-right: 10px;"/>
 
     </div>
   </div>
@@ -33,19 +25,22 @@
 
 <script setup>
 import {NAvatar, NButton, NIcon, NMenu} from 'naive-ui'
-import {RefreshOutline,} from '@vicons/ionicons5'
+import {RefreshOutline, SquareOutline, CopyOutline, Close, Remove} from '@vicons/ionicons5'
 import logo from '../assets/images/logo.svg'
-import {onMounted, ref, shallowRef} from "vue";
-// import {ref} from "vue";
-// import {Quit, WindowMaximise, WindowMinimise, WindowUnmaximise} from "../../wailsjs/runtime";
+import {onMounted, ref} from "vue";
+import {Quit, WindowMaximise, WindowMinimise, WindowUnmaximise} from "../../wailsjs/runtime";
 import {CheckUpdate} from '../../wailsjs/go/system/Update'
 import {GetVersion} from '../../wailsjs/go/main/App'
 import { useNotification } from 'naive-ui'
+import {renderIcon} from "../utils/common";
 
 const props = defineProps({
   options: {},
   value: {}
 });
+
+const loading = ref(false)
+
 
 const emit = defineEmits(['select'])
 let version = ref({
@@ -60,17 +55,23 @@ const handleSelect = (key, item) => {
 }
 
 const checkForUpdates = async () => {
-  console.info("check version……")
-  version.value.tag_name = await GetVersion()
-  console.info(version.value.tag_name)
-  const resp = await CheckUpdate()
-  console.info(resp)
-  if (resp.tag_name !== version.value.tag_name){
-    notification.info({
-      title: '发现新版本' + resp.tag_name,
-      content: version.value.body,
-    })
+  loading.value = true
+  try {
+    console.info("check version……")
+    version.value.tag_name = await GetVersion()
+    console.info(version.value.tag_name)
+    const resp = await CheckUpdate()
+    console.info(resp)
+    if (resp.tag_name !== version.value.tag_name){
+      notification.info({
+        title: '发现新版本' + resp.tag_name,
+        content: version.value.body,
+      })
+    }
+  }finally {
+    loading.value = false
   }
+
 }
 
 onMounted(async () => {
@@ -78,24 +79,29 @@ onMounted(async () => {
 
 })
 
-// const isMaximized = ref(false);
-//
-// const minimizeWindow = () => {
-//   WindowMinimise()
-// }
-//
-// const resizeWindow = () => {
-//   isMaximized.value = !isMaximized.value;
-//   if (isMaximized.value) {
-//     WindowMaximise();
-//   } else {
-//     WindowUnmaximise();
-//   }
-// }
-//
-// const closeWindow = () => {
-//   Quit()
-// }
+const isMaximized = ref(false);
+const MaxMinIcon = ref(SquareOutline)
+
+const minimizeWindow = () => {
+  WindowMinimise()
+}
+
+const resizeWindow = () => {
+  isMaximized.value = !isMaximized.value;
+  // 最大化
+  if (isMaximized.value) {
+    WindowMaximise();
+    MaxMinIcon.value = CopyOutline;
+  } else {
+    WindowUnmaximise();
+    MaxMinIcon.value = SquareOutline;
+  }
+  console.log(isMaximized.value)
+}
+
+const closeWindow = () => {
+  Quit()
+}
 
 </script>
 
@@ -123,5 +129,7 @@ onMounted(async () => {
   display: flex;
   align-items: center;
 }
-
+.right-section .n-button {
+  padding: 0 8px;
+}
 </style>

@@ -6,7 +6,7 @@
 
             <n-notification-provider placement="bottom-right">
               <n-layout-header :class="headerClass" bordered
-                               style="height: 6dvh; padding: 0 20px 0 0; --wails-draggable:drag">
+                               style="height: 6dvh; padding: 0;  --wails-draggable:drag">
 
               <Header :value="activeTab" :options="menuOptions" @update:value="handleMenuSelect"/>
               </n-layout-header>
@@ -18,16 +18,18 @@
             <n-layout-sider
                 bordered
                 :collapsed="collapsed"
-                collapse-mode="width"
                 :collapsed-width="64"
+                collapse-mode="width"
                 :width="120"
                 show-trigger
                 @collapse="collapsed = true"
                 @expand="collapsed = false"
+                style="background-color: #f0f0f0;"
             >
               <n-menu
                   :collapsed-width="64"
-                  :collapsed-icon-size="22"
+                  :collapsed-icon-size="24"
+                  :icon-size="24"
                   :mode="'vertical'"
                   :value="activeTab"
                   @update:value="handleMenuSelect"
@@ -72,12 +74,11 @@
 </template>
 
 <script setup>
-import {computed, h, onMounted, ref, shallowRef} from 'vue'
+import {onMounted, ref, shallowRef} from 'vue'
 import {
   darkTheme,
   lightTheme,
   NConfigProvider,
-  NIcon,
   NLayout,
   NLayoutContent,
   NLayoutHeader, NMenu,
@@ -110,11 +111,26 @@ onMounted(async () => {
     }
   }
 })
+// 左侧菜单
+const sideMenuOptions = [
+  {
+    label: '主页',
+    key: 'HelloWorld3',
+    icon: renderIcon(HomeOutline),
+    component: HelloWorld
+  },
+  {
+    label: '设置',
+    key: 'Settings4',
+    icon: renderIcon(SettingsOutline),
+    component: Settings
+  },
+
+]
 
 // 顶部菜单
 const menuOptions = [
   {
-    label: '首页',
     key: 'HelloWorld',
     icon: renderIcon(HomeOutline),
     tab_icon: HomeOutline,
@@ -155,40 +171,9 @@ const menuOptions = [
         icon: renderIcon(HomeOutline),
         component: HelloWorld
       },
-      {
-        label: 'HelloWorld',
-        key: 'HelloWorld6',
-        icon: renderIcon(HomeOutline),
-        component: HelloWorld
-      },
-      {
-        label: 'HelloWorld',
-        key: 'HelloWorld7',
-        icon: renderIcon(HomeOutline),
-        component: HelloWorld
-      },
-      {
-        label: 'HelloWorld',
-        key: 'HelloWorld8',
-        icon: renderIcon(HomeOutline),
-        component: HelloWorld
-      },
-      {
-        label: 'HelloWorld',
-        key: 'HelloWorld9',
-        icon: renderIcon(HomeOutline),
-        component: HelloWorld
-      },
-      {
-        label: 'HelloWorld',
-        key: 'HelloWorld10',
-        icon: renderIcon(HomeOutline),
-        component: HelloWorld
-      },
     ]
   },
   {
-    label: '设置',
     key: 'Settings',
     icon: renderIcon(SettingsOutline),
     children: [
@@ -202,21 +187,6 @@ const menuOptions = [
   },
 ]
 
-// 左侧菜单
-const sideMenuOptions = [
-  {
-    label: '主页',
-    key: 'HelloWorld3',
-    icon: renderIcon(HomeOutline),
-    component: HelloWorld
-  },
-  {
-    label: '设置',
-    key: 'Settings4',
-    icon: renderIcon(SettingsOutline),
-    component: Settings
-  },
-]
 
 const openTabs = shallowRef([menuOptions[0].children[0]])
 const activeTab = ref(menuOptions[0].children[0].key)
