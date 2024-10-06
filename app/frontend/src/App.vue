@@ -18,7 +18,6 @@
                 bordered
                 collapsed
                 collapse-mode="width"
-                style="background-color: #f0f0f0;"
             >
               <n-menu
                   :mode="'vertical'"
@@ -225,11 +224,14 @@ body {
   padding: 8px 24px;
 }
 
-.lightTheme {
+.lightTheme .n-layout-header {
   background-color: #f2f2f2;
 }
 
 .right-section .n-button {
   margin-left: 10px;
+}
+.lightTheme .n-layout-sider {
+  background-color: #f0f0f0 !important;
 }
 </style>
