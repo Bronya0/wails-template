@@ -4,32 +4,23 @@
       <n-layout has-sider>
         <n-layout>
 
-            <n-notification-provider placement="bottom-right">
-              <n-layout-header :class="headerClass" bordered
-                               style="height: 6dvh; padding: 0;  --wails-draggable:drag">
+          <n-notification-provider placement="bottom-right">
+            <n-layout-header :class="headerClass" bordered
+                             style="height: 6dvh; padding: 0;  --wails-draggable:drag">
 
               <Header :value="activeTab" :options="menuOptions" @update:value="handleMenuSelect"/>
-              </n-layout-header>
-            </n-notification-provider>
-
+            </n-layout-header>
+          </n-notification-provider>
 
 
           <n-layout has-sider style="height: 94dvh;">
             <n-layout-sider
                 bordered
-                :collapsed="collapsed"
-                :collapsed-width="64"
+                collapsed
                 collapse-mode="width"
-                :width="120"
-                show-trigger
-                @collapse="collapsed = true"
-                @expand="collapsed = false"
                 style="background-color: #f0f0f0;"
             >
               <n-menu
-                  :collapsed-width="64"
-                  :collapsed-icon-size="24"
-                  :icon-size="24"
                   :mode="'vertical'"
                   :value="activeTab"
                   @update:value="handleMenuSelect"
@@ -49,12 +40,12 @@
 
                 <n-tab-pane v-for="tab in openTabs" :key="tab.key" :name="tab.key" display-directive="show"
                             :closable="openTabs.length > 1">
-<!--                  <template #tab>-->
-<!--                    <n-flex align="center">-->
-<!--                      <n-icon :component="tab.tab_icon"/>-->
-<!--                      {{ tab.label }}-->
-<!--                    </n-flex>-->
-<!--                  </template>-->
+                  <!--                  <template #tab>-->
+                  <!--                    <n-flex align="center">-->
+                  <!--                      <n-icon :component="tab.tab_icon"/>-->
+                  <!--                      {{ tab.label }}-->
+                  <!--                    </n-flex>-->
+                  <!--                  </template>-->
 
                   <div class="tab-content">
                     <component :is="tab.component" :name="tab.label" :key="tab.key"
@@ -95,7 +86,6 @@ import {WindowSetSize} from "../wailsjs/runtime";
 import {renderIcon} from "./utils/common";
 
 let headerClass = shallowRef('lightTheme')
-const collapsed = shallowRef(true)
 
 onMounted(async () => {
   // 从后端加载配置
@@ -117,7 +107,24 @@ const sideMenuOptions = [
     label: '主页',
     key: 'HelloWorld3',
     icon: renderIcon(HomeOutline),
-    component: HelloWorld
+    component: HelloWorld,
+    children: [
+      {
+        label: 'topic',
+        key: 'HelloWorldw',
+        component: HelloWorld
+      },
+      {
+        label: 'broker',
+        key: 'HelloWor6ldw',
+        component: HelloWorld
+      },
+      {
+        label: 'info',
+        key: 'HelloWo4rldw',
+        component: HelloWorld
+      },
+    ]
   },
   {
     label: '设置',
@@ -128,68 +135,14 @@ const sideMenuOptions = [
 
 ]
 
+
 // 顶部菜单
 const menuOptions = [
-  {
-    key: 'HelloWorld',
-    icon: renderIcon(HomeOutline),
-    tab_icon: HomeOutline,
-    children: [
-      {
-        label: 'HelloWorld',
-        key: 'HelloWorld',
-        icon: renderIcon(HomeOutline),
-        component: HelloWorld
-      },
-      {
-        label: 'HelloWorld',
-        key: 'HelloWorld1',
-        icon: renderIcon(HomeOutline),
-        component: HelloWorld
-      },
-      {
-        label: 'HelloWorld',
-        key: 'HelloWorld2',
-        icon: renderIcon(HomeOutline),
-        component: HelloWorld
-      },
-      {
-        label: 'HelloWorld',
-        key: 'HelloWorld3',
-        icon: renderIcon(HomeOutline),
-        component: HelloWorld
-      },
-      {
-        label: 'HelloWorld',
-        key: 'HelloWorld4',
-        icon: renderIcon(HomeOutline),
-        component: HelloWorld
-      },
-      {
-        label: 'HelloWorld',
-        key: 'HelloWorld5',
-        icon: renderIcon(HomeOutline),
-        component: HelloWorld
-      },
-    ]
-  },
-  {
-    key: 'Settings',
-    icon: renderIcon(SettingsOutline),
-    children: [
-      {
-        label: 'Settings',
-        key: 'Settings',
-        icon: renderIcon(SettingsOutline),
-        component: Settings
-      },
-    ]
-  },
 ]
 
 
-const openTabs = shallowRef([menuOptions[0].children[0]])
-const activeTab = ref(menuOptions[0].children[0].key)
+const openTabs = shallowRef([sideMenuOptions[0].children[0]])
+const activeTab = ref(sideMenuOptions[0].children[0].key)
 
 // 切换菜单
 // item是从Header里handleSelect emits传过来的菜单对象
@@ -258,8 +211,6 @@ function themeChange(newTheme) {
   Theme.value = newTheme
   headerClass = newTheme === lightTheme ? "lightTheme" : "darkTheme"
 }
-
-
 
 
 </script>

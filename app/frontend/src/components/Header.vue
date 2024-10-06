@@ -3,21 +3,39 @@
     <div class="left-section">
       <n-avatar size="small" :src="logo"/>
       <h1 class="title">测试APP</h1>
-      <n-h5>    {{version.tag_name}}</n-h5>
+      <n-h5> {{ version.tag_name }}</n-h5>
     </div>
     <div class="right-section">
       <n-menu mode="horizontal" :value="props.value" :options="props.options" @update:value="handleSelect"/>
-      <n-button quaternary :loading="loading" @click="checkForUpdates">
-        <template #icon>
-          <n-icon>
-            <RefreshOutline/>
-          </n-icon>
-        </template>
-      </n-button>
 
-      <n-button  quaternary :focusable="false" @click="minimizeWindow" :render-icon="renderIcon(Remove)" />
-      <n-button   quaternary :focusable="false" @click="resizeWindow" :render-icon="renderIcon(MaxMinIcon)" />
-      <n-button  quaternary :focusable="false" @click="closeWindow" :render-icon="renderIcon(Close)" style="margin-right: 10px;"/>
+      <n-tooltip placement="bottom" trigger="hover">
+        <template #trigger>
+          <n-button quaternary :focusable="false" :loading="loading" @click="checkForUpdates" :render-icon="renderIcon(RefreshOutline)"/>
+        </template>
+        <span> 检查版本 {{ version.tag_name}} </span>
+      </n-tooltip>
+
+      <n-tooltip placement="bottom" trigger="hover">
+        <template #trigger>
+          <n-button quaternary :focusable="false" @click="minimizeWindow" :render-icon="renderIcon(Remove)"/>
+        </template>
+        <span> 最小化 </span>
+      </n-tooltip>
+
+      <n-tooltip placement="bottom" trigger="hover">
+        <template #trigger>
+          <n-button quaternary :focusable="false" @click="resizeWindow" :render-icon="renderIcon(MaxMinIcon)"/>
+        </template>
+        <span> {{ isMaximized ? '还原' : '最大化'}} </span>
+      </n-tooltip>
+
+      <n-tooltip placement="bottom" trigger="hover">
+        <template #trigger>
+          <n-button quaternary :focusable="false" @click="closeWindow" :render-icon="renderIcon(Close)"
+                    style="margin-right: 10px;"/>
+        </template>
+        <span> 关闭 </span>
+      </n-tooltip>
 
     </div>
   </div>
@@ -31,7 +49,7 @@ import {onMounted, ref} from "vue";
 import {Quit, WindowMaximise, WindowMinimise, WindowUnmaximise} from "../../wailsjs/runtime";
 import {CheckUpdate} from '../../wailsjs/go/system/Update'
 import {GetVersion} from '../../wailsjs/go/main/App'
-import { useNotification } from 'naive-ui'
+import {useNotification} from 'naive-ui'
 import {renderIcon} from "../utils/common";
 
 const props = defineProps({
@@ -62,13 +80,13 @@ const checkForUpdates = async () => {
     console.info(version.value.tag_name)
     const resp = await CheckUpdate()
     console.info(resp)
-    if (resp.tag_name !== version.value.tag_name){
+    if (resp.tag_name !== version.value.tag_name) {
       notification.info({
         title: '发现新版本' + resp.tag_name,
         content: version.value.body,
       })
     }
-  }finally {
+  } finally {
     loading.value = false
   }
 
@@ -129,6 +147,7 @@ const closeWindow = () => {
   display: flex;
   align-items: center;
 }
+
 .right-section .n-button {
   padding: 0 8px;
 }
