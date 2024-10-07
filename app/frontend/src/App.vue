@@ -106,25 +106,30 @@ onMounted(async () => {
 const sideMenuOptions = [
   {
     label: '主页',
+    key: '主页',
     icon: renderIcon(HomeOutline),
     component: HelloWorld,
     children: [
       {
         label: 'topic1',
+        key: 'topic1',
         component: HelloWorld
       },
       {
         label: 'topic2',
+        key: 'topic2',
         component: HelloWorld
       },
       {
         label: 'topic3',
+        key: 'topic3',
         component: HelloWorld
       },
     ]
   },
   {
     label: '设置',
+    key: '设置',
     icon: renderIcon(SettingsOutline),
     component: Settings
   },

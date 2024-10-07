@@ -1,32 +1,19 @@
 <template>
-  <div class="aside-btn">
-    <n-flex vertical>
-      <n-menu
-          :mode="'vertical'"
-          :value="value"
-          @update:value="handleMenuSelect"
-          :options="options"
-      />
-<!--      <n-button text ghost :focusable="false" @click="checkForUpdates" :render-icon="renderIcon(RefreshOutline)"-->
-<!--                :loading="update_loading"/>-->
-    </n-flex>
-  </div>
+    <n-menu
+        :mode="'vertical'"
+        :value="props.value"
+        @update:value="handleMenuSelect"
+        :options="props.options"
+    />
 </template>
 
 
 <script setup>
-import {renderIcon} from "../utils/common";
-import {RefreshOutline} from "@vicons/ionicons5";
-import {GetVersion} from "../../wailsjs/go/main/App";
-import {CheckUpdate} from "../../wailsjs/go/system/Update";
-import {ref} from "vue";
 import {useMessage, useNotification} from "naive-ui";
 
-defineProps({
-  options: {},
-  value: {},
-});
-const emit = defineEmits(['checkForUpdates'])
+const props = defineProps(['options', 'value']);
+
+const emit = defineEmits(['update:value'])
 const message = useMessage()
 const notification = useNotification()
 

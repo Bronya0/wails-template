@@ -36,15 +36,12 @@ import {GetVersion} from '../../wailsjs/go/main/App'
 import {useNotification} from 'naive-ui'
 import {renderIcon} from "../utils/common";
 
-const props = defineProps({
-  options: {},
-  value: {}
-});
+const props = defineProps(['options', 'value']);
+const emit = defineEmits(['update:value'])
+
 
 const update_loading = ref(false)
 
-
-const emit = defineEmits([])
 let version = ref({
   tag_name: "",
   body: "",
