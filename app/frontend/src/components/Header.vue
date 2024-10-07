@@ -17,7 +17,7 @@
       </n-tooltip>
 
       <n-button quaternary :focusable="false" @click="minimizeWindow" :render-icon="renderIcon(Remove)"/>
-      <n-button quaternary :focusable="false" @click="resizeWindow" :render-icon="renderIcon(SquareOutline)"/>
+      <n-button quaternary :focusable="false" @click="resizeWindow" :render-icon="renderIcon(MaxMinIcon)"/>
       <n-button quaternary style="font-size: 22px" :focusable="false" @click="closeWindow">
         <n-icon><Close /></n-icon>
       </n-button>
@@ -78,7 +78,7 @@ onMounted(async () => {
 })
 
 const isMaximized = ref(false);
-let MaxMinIcon = shallowRef(SquareOutline)
+const MaxMinIcon = shallowRef(SquareOutline)
 
 const minimizeWindow = () => {
   WindowMinimise()
