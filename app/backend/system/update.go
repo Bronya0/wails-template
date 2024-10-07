@@ -5,6 +5,7 @@ import (
 	"app/backend/types"
 	"context"
 	"github.com/go-resty/resty/v2"
+	"strings"
 )
 
 type Update struct {
@@ -18,5 +19,6 @@ func (obj *Update) CheckUpdate() *types.Tag {
 	client := resty.New()
 	tag := &types.Tag{}
 	_, _ = client.R().SetResult(tag).Get(common.UPDATE_URL)
+	tag.TagName = strings.TrimSpace(tag.TagName)
 	return tag
 }

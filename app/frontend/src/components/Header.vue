@@ -26,7 +26,7 @@
 </template>
 
 <script setup>
-import {NAvatar, NButton, NIcon, NMenu} from 'naive-ui'
+import {NAvatar, NButton, NMenu, useMessage} from 'naive-ui'
 import {RefreshOutline, SquareOutline, CopyOutline, Close, Remove} from '@vicons/ionicons5'
 import logo from '../assets/images/logo.svg'
 import {onMounted, ref, shallowRef} from "vue";
@@ -48,6 +48,7 @@ let version = ref({
 })
 
 const notification = useNotification()
+const message = useMessage()
 
 const handleMenuSelect = (key, item) => {
   emit('update:value', key, item)
@@ -56,9 +57,9 @@ const handleMenuSelect = (key, item) => {
 const checkForUpdates = async () => {
   update_loading.value = true
   try {
-    version.value.tag_name = await GetVersion()
+    const version = await GetVersion()
     const resp = await CheckUpdate()
-    if (resp.tag_name !== version.value.tag_name) {
+    if (resp && resp.tag_name !== version) {
       notification.info({
         title: '发现新版本' + resp.tag_name,
         content: resp.body,
@@ -70,6 +71,7 @@ const checkForUpdates = async () => {
 }
 
 onMounted(async () => {
+  version.value.tag_name = await GetVersion()
   await checkForUpdates()
 
 })
