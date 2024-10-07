@@ -45,7 +45,7 @@
 import {NAvatar, NButton, NIcon, NMenu} from 'naive-ui'
 import {RefreshOutline, SquareOutline, CopyOutline, Close, Remove} from '@vicons/ionicons5'
 import logo from '../assets/images/logo.svg'
-import {onMounted, ref} from "vue";
+import {onMounted, ref, shallowRef} from "vue";
 import {Quit, WindowMaximise, WindowMinimise, WindowUnmaximise} from "../../wailsjs/runtime";
 import {CheckUpdate} from '../../wailsjs/go/system/Update'
 import {GetVersion} from '../../wailsjs/go/main/App'
@@ -98,7 +98,7 @@ onMounted(async () => {
 })
 
 const isMaximized = ref(false);
-const MaxMinIcon = ref(SquareOutline)
+let MaxMinIcon = shallowRef(SquareOutline)
 
 const minimizeWindow = () => {
   WindowMinimise()

@@ -8,10 +8,12 @@ import (
 	"gopkg.in/yaml.v3"
 	"os"
 	"path/filepath"
+	"sync"
 )
 
 type AppConfig struct {
 	ctx context.Context
+	mu  sync.Mutex
 }
 
 func (a *AppConfig) Start(ctx context.Context) {
@@ -19,6 +21,8 @@ func (a *AppConfig) Start(ctx context.Context) {
 }
 
 func (a *AppConfig) GetConfig() *types.Config {
+	a.mu.Lock()
+	defer a.mu.Unlock()
 	configPath := a.getConfigPath()
 	defaultConfig := &types.Config{
 		Width:    common.Width,
@@ -38,6 +42,8 @@ func (a *AppConfig) GetConfig() *types.Config {
 }
 
 func (a *AppConfig) SaveConfig(config *types.Config) string {
+	a.mu.Lock()
+	defer a.mu.Unlock()
 	configPath := a.getConfigPath()
 	fmt.Println(configPath)
 
