@@ -17,9 +17,10 @@
       </n-tooltip>
 
       <n-button quaternary :focusable="false" @click="minimizeWindow" :render-icon="renderIcon(Remove)"/>
-      <n-button quaternary :focusable="false" @click="resizeWindow" :render-icon="renderIcon(MaxMinIcon)"/>
-      <n-button quaternary :focusable="false" @click="closeWindow" :render-icon="renderIcon(Close)"
-                style="margin-right: 10px;"/>
+      <n-button quaternary :focusable="false" @click="resizeWindow" :render-icon="renderIcon(SquareOutline)"/>
+      <n-button quaternary style="font-size: 22px" :focusable="false" @click="closeWindow">
+        <n-icon><Close /></n-icon>
+      </n-button>
 
     </div>
   </div>
@@ -127,7 +128,4 @@ const closeWindow = () => {
   align-items: center;
 }
 
-.right-section .n-button {
-  padding: 0 8px;
-}
 </style>
