@@ -10,32 +10,16 @@
 
       <n-tooltip placement="bottom" trigger="hover">
         <template #trigger>
-          <n-button quaternary :focusable="false" :loading="loading" @click="checkForUpdates" :render-icon="renderIcon(RefreshOutline)"/>
+          <n-button quaternary :focusable="false" :loading="loading" @click="checkForUpdates"
+                    :render-icon="renderIcon(RefreshOutline)"/>
         </template>
-        <span> 检查版本 {{ version.tag_name}} </span>
+        <span> 检查版本 {{ version.tag_name }} </span>
       </n-tooltip>
 
-      <n-tooltip placement="bottom" trigger="hover">
-        <template #trigger>
-          <n-button quaternary :focusable="false" @click="minimizeWindow" :render-icon="renderIcon(Remove)"/>
-        </template>
-        <span> 最小化 </span>
-      </n-tooltip>
-
-      <n-tooltip placement="bottom" trigger="hover">
-        <template #trigger>
-          <n-button quaternary :focusable="false" @click="resizeWindow" :render-icon="renderIcon(MaxMinIcon)"/>
-        </template>
-        <span> {{ isMaximized ? '还原' : '最大化'}} </span>
-      </n-tooltip>
-
-      <n-tooltip placement="bottom" trigger="hover">
-        <template #trigger>
-          <n-button quaternary :focusable="false" @click="closeWindow" :render-icon="renderIcon(Close)"
-                    style="margin-right: 10px;"/>
-        </template>
-        <span> 关闭 </span>
-      </n-tooltip>
+      <n-button text  :focusable="false" @click="minimizeWindow" :render-icon="renderIcon(Remove)"/>
+        <n-button text  :focusable="false" @click="resizeWindow" :render-icon="renderIcon(MaxMinIcon)" />
+      <n-button text  :focusable="false" @click="closeWindow" :render-icon="renderIcon(Close)"
+                style="margin-right: 10px;"/>
 
     </div>
   </div>
