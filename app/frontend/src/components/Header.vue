@@ -8,34 +8,36 @@
     <div class="right-section">
       <n-menu mode="horizontal" :value="props.value" :options="props.options" @update:value="handleMenuSelect"/>
 
-      <n-tooltip placement="bottom" trigger="hover">
-        <template #trigger>
-          <n-button quaternary :focusable="false" :loading="update_loading" @click="checkForUpdates"
-                    :render-icon="renderIcon(RefreshOutline)"/>
-        </template>
-        <span> 检查版本 {{ version.tag_name }} </span>
-      </n-tooltip>
 
-      <n-button quaternary :focusable="false" @click="minimizeWindow" :render-icon="renderIcon(Remove)"/>
-      <n-button quaternary :focusable="false" @click="resizeWindow" :render-icon="renderIcon(MaxMinIcon)"/>
-      <n-button quaternary style="font-size: 22px" :focusable="false" @click="closeWindow">
-        <n-icon><Close /></n-icon>
-      </n-button>
-
-    </div>
+    <n-button quaternary @click="openUrl('https://github.com/Bronya0/wails-template')" :render-icon="renderIcon(LogoGithub)"/>
+    <n-tooltip placement="bottom" trigger="hover">
+      <template #trigger>
+        <n-button quaternary :focusable="false" :loading="update_loading" @click="checkForUpdates"
+                  :render-icon="renderIcon(PushOutline)"/>
+      </template>
+      <span> 检查版本 {{ version.tag_name }} </span>
+    </n-tooltip>
+    <n-button quaternary :focusable="false" @click="minimizeWindow" :render-icon="renderIcon(Remove)"/>
+    <n-button quaternary :focusable="false" @click="resizeWindow" :render-icon="renderIcon(MaxMinIcon)"/>
+    <n-button quaternary style="font-size: 22px" :focusable="false" @click="closeWindow">
+      <n-icon>
+        <Close/>
+      </n-icon>
+    </n-button>
+  </div>
   </div>
 </template>
 
 <script setup>
 import {NAvatar, NButton, NMenu, useMessage} from 'naive-ui'
-import {RefreshOutline, SquareOutline, CopyOutline, Close, Remove} from '@vicons/ionicons5'
+import {PushOutline, SquareOutline, CopyOutline, Close, Remove, LogoGithub} from '@vicons/ionicons5'
 import logo from '../assets/images/logo.svg'
 import {onMounted, ref, shallowRef} from "vue";
 import {Quit, WindowMaximise, WindowMinimise, WindowUnmaximise} from "../../wailsjs/runtime";
 import {CheckUpdate} from '../../wailsjs/go/system/Update'
 import {GetVersion} from '../../wailsjs/go/main/App'
 import {useNotification} from 'naive-ui'
-import {renderIcon} from "../utils/common";
+import {openUrl, renderIcon} from "../utils/common";
 
 const props = defineProps(['options', 'value']);
 const emit = defineEmits(['update:value'])

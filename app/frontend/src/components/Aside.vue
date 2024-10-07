@@ -5,11 +5,17 @@
         @update:value="handleMenuSelect"
         :options="props.options"
     />
+
+<!--  <n-flex class="aside-btn">-->
+<!--    <n-button quaternary :render-icon="renderIcon(LogoGithub)"/>-->
+<!--  </n-flex>-->
 </template>
 
 
 <script setup>
-import {useMessage, useNotification} from "naive-ui";
+import {lightTheme, NButton, useMessage, useNotification} from "naive-ui";
+import {renderIcon} from "../utils/common";
+import {LogoGithub, SunnyOutline} from "@vicons/ionicons5";
 
 const props = defineProps(['options', 'value']);
 

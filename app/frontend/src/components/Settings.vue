@@ -13,13 +13,8 @@
 
       <n-form-item label="主题">
         <n-flex>
-          <n-button strong  @click="theme=darkTheme">
-            dark
-          </n-button>
-          <n-button strong  type="tertiary" @click="theme=lightTheme">
-            light
-          </n-button>
-
+          <n-button @click="theme=lightTheme" :render-icon="renderIcon(SunnyOutline)"/>
+          <n-button @click="theme=darkTheme" :render-icon="renderIcon(Moon)"/>
         </n-flex>
       </n-form-item>
 
@@ -47,6 +42,8 @@ import {
 } from 'naive-ui'
 import {GetConfig, SaveConfig} from '../../wailsjs/go/config/AppConfig'
 import {WindowSetSize} from "../../wailsjs/runtime";
+import {renderIcon} from "../utils/common";
+import {Moon, SunnyOutline} from "@vicons/ionicons5";
 
 const message = useMessage()
 const emit = defineEmits(['update_theme'])
@@ -77,7 +74,7 @@ onMounted(async () => {
 const saveConfig = async () => {
   config.value.theme = theme.name
   const err = await SaveConfig(config.value)
-  if (err !== ""){
+  if (err !== "") {
     message.error("保存失败：" + err)
     return
   }

@@ -1,14 +1,14 @@
 <template>
-  <n-config-provider :theme="Theme">
+  <n-config-provider
+      :theme="Theme"
+  >
     <n-message-provider>
       <n-notification-provider placement="bottom-right">
 
         <n-layout has-sider :class="headerClass">
           <n-layout>
 
-            <n-layout-header bordered
-                             style="height: 5dvh; padding: 0;  --wails-draggable:drag">
-
+            <n-layout-header bordered style="height: 5dvh; padding: 0;  --wails-draggable:drag">
               <Header :value="activeTabLabel" :options="menuOptions" @update:value="handleMenuSelect"/>
             </n-layout-header>
 
@@ -191,7 +191,6 @@ function handleTabClose(label) {
   }
 }
 
-
 // 根据key切换
 function handleTabChange(label) {
   console.log(label)
@@ -214,7 +213,15 @@ function themeChange(newTheme) {
   headerClass = newTheme === lightTheme ? "lightTheme" : "darkTheme"
 }
 
-
+// // 自定义主题
+// /**
+//  * @type import('naive-ui').GlobalThemeOverrides
+//  */
+// const themeOverrides = {
+//   Button: {
+//     color: '#f2f2f7'
+//   }
+// }
 </script>
 
 <style>
@@ -228,7 +235,7 @@ body {
 }
 
 .lightTheme .n-layout-header {
-  background-color: #f2f2f2;
+  background-color: #f2f2f7;
 }
 
 .right-section .n-button {
@@ -236,6 +243,6 @@ body {
 }
 
 .lightTheme .n-layout-sider {
-  background-color: #f0f0f0 !important;
+  background-color: #f2f2f7 !important;
 }
 </style>
