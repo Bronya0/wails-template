@@ -35,23 +35,28 @@
 
 <script setup>
 import {onMounted, ref} from 'vue'
-import {darkTheme, lightTheme, NButton, NForm, NFormItem, NInputNumber, NSelect, useMessage} from 'naive-ui'
+import {
+  darkTheme,
+  lightTheme,
+  NButton,
+  NForm,
+  NFormItem,
+  NInputNumber,
+  NSelect,
+  useMessage,
+} from 'naive-ui'
 import {GetConfig, SaveConfig} from '../../wailsjs/go/config/AppConfig'
 import {WindowSetSize} from "../../wailsjs/runtime";
-// import {onDeactivated} from "@vue/runtime-core";
 
 const message = useMessage()
-
 const emit = defineEmits(['update_theme'])
 let theme = lightTheme
-
 const config = ref({
   width: 1248,
   height: 768,
   language: 'zh-CN',
   theme: theme.name,
 })
-
 const languageOptions = [
   {label: '中文', value: 'zh-CN'},
   {label: 'English', value: 'en-US'}
@@ -85,17 +90,5 @@ const saveConfig = async () => {
   config.value = await GetConfig()
 
 }
-
-//
-// onBeforeUnmount(() => {
-//   console.info("卸载settings组件……")
-// })
-//
-// onActivated(() => {
-//   console.info("激活settings组件……")
-// })
-// onDeactivated(() => {
-//   console.info("失活settings组件……")
-// })
 
 </script>

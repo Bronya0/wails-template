@@ -1,64 +1,65 @@
 <template>
   <n-config-provider :theme="Theme">
     <n-message-provider>
-      <n-layout has-sider  :class="headerClass">
-        <n-layout>
+      <n-notification-provider placement="bottom-right">
 
-          <n-notification-provider placement="bottom-right">
+        <n-layout has-sider :class="headerClass">
+          <n-layout>
+
             <n-layout-header bordered
-                             style="height: 6dvh; padding: 0;  --wails-draggable:drag">
+                             style="height: 5dvh; padding: 0;  --wails-draggable:drag">
 
-              <Header :value="activeTab" :options="menuOptions" @update:value="handleMenuSelect"/>
+              <Header :value="activeTabLabel" :options="menuOptions" @update:value="handleMenuSelect"/>
             </n-layout-header>
-          </n-notification-provider>
 
 
-          <n-layout has-sider style="height: 94dvh;">
-            <n-layout-sider
-                bordered
-                collapsed
-                collapse-mode="width"
-            >
-              <n-menu
-                  :mode="'vertical'"
-                  :value="activeTab"
+            <n-layout has-sider style="height: 95dvh;">
+              <n-layout-sider
+                  bordered
+                  collapsed
+                  collapse-mode="width"
+              >
+              <Aside
+                  :value="activeTabLabel"
                   @update:value="handleMenuSelect"
                   :options="sideMenuOptions"
               />
-            </n-layout-sider>
 
-            <n-layout-content>
-              <n-tabs
-                  type="card"
-                  animated
-                  size="small"
-                  :value="activeTab"
-                  @update:value="handleTabChange"
-                  @close="handleTabClose"
-              >
+              </n-layout-sider>
 
-                <n-tab-pane v-for="tab in openTabs" :key="tab.key" :name="tab.key" display-directive="show"
-                            :closable="openTabs.length > 1">
-                  <!--                  <template #tab>-->
-                  <!--                    <n-flex align="center">-->
-                  <!--                      <n-icon :component="tab.tab_icon"/>-->
-                  <!--                      {{ tab.label }}-->
-                  <!--                    </n-flex>-->
-                  <!--                  </template>-->
+              <n-layout-content>
+                <n-tabs
+                    type="card"
+                    animated
+                    size="small"
+                    :value="activeTabLabel"
+                    @update:value="handleTabChange"
+                    @close="handleTabClose"
+                >
 
-                  <div class="tab-content">
-                    <component :is="tab.component" :name="tab.label" :key="tab.key"
-                               @update_theme="themeChange"
-                               @selectTab="handleTabChangeByIndex"
-                    />
-                  </div>
-                </n-tab-pane>
-              </n-tabs>
+                  <n-tab-pane v-for="tab in openTabs" :key="tab.key" :name="tab.label" display-directive="show"
+                              :closable="openTabs.length > 1">
+                    <!--                  <template #tab>-->
+                    <!--                    <n-flex align="center">-->
+                    <!--                      <n-icon :component="tab.tab_icon"/>-->
+                    <!--                      {{ tab.label }}-->
+                    <!--                    </n-flex>-->
+                    <!--                  </template>-->
 
-            </n-layout-content>
+                    <div class="tab-content">
+                      <component :is="tab.component" :name="tab.label" :key="tab.key"
+                                 @update_theme="themeChange"
+                                 @selectTab="handleTabChangeByIndex"
+                      />
+                    </div>
+                  </n-tab-pane>
+                </n-tabs>
+
+              </n-layout-content>
+            </n-layout>
           </n-layout>
         </n-layout>
-      </n-layout>
+      </n-notification-provider>
     </n-message-provider>
   </n-config-provider>
 </template>
@@ -71,10 +72,10 @@ import {
   NConfigProvider,
   NLayout,
   NLayoutContent,
-  NLayoutHeader, NMenu,
+  NLayoutHeader,
   NMessageProvider,
   NTabPane,
-  NTabs, useOsTheme
+  NTabs
 } from 'naive-ui'
 import {HomeOutline, SettingsOutline,} from '@vicons/ionicons5'
 import Header from './components/Header.vue'
@@ -83,6 +84,7 @@ import HelloWorld from './components/HelloWorld.vue'
 import {GetConfig} from "../wailsjs/go/config/AppConfig";
 import {WindowSetSize} from "../wailsjs/runtime";
 import {renderIcon} from "./utils/common";
+import Aside from "./components/Aside.vue";
 
 let headerClass = shallowRef('lightTheme')
 
@@ -104,30 +106,25 @@ onMounted(async () => {
 const sideMenuOptions = [
   {
     label: '主页',
-    key: 'HelloWorld3',
     icon: renderIcon(HomeOutline),
     component: HelloWorld,
     children: [
       {
-        label: 'topic',
-        key: 'HelloWorldw',
+        label: 'topic1',
         component: HelloWorld
       },
       {
-        label: 'broker',
-        key: 'HelloWor6ldw',
+        label: 'topic2',
         component: HelloWorld
       },
       {
-        label: 'info',
-        key: 'HelloWo4rldw',
+        label: 'topic3',
         component: HelloWorld
       },
     ]
   },
   {
     label: '设置',
-    key: 'Settings4',
     icon: renderIcon(SettingsOutline),
     component: Settings
   },
@@ -136,34 +133,34 @@ const sideMenuOptions = [
 
 
 // 顶部菜单
-const menuOptions = [
-]
+const menuOptions = []
 
 
 const openTabs = shallowRef([sideMenuOptions[0].children[0]])
-const activeTab = ref(sideMenuOptions[0].children[0].key)
+const activeTabLabel = ref(sideMenuOptions[0].children[0].label)
 
 // 切换菜单
 // item是从Header里handleSelect emits传过来的菜单对象
 function handleMenuSelect(key, item) {
   // 检查 item 是否已存在于 openTabs 中
-  const existingTab = findTabByKey(openTabs.value, item.key);
+  const existingTab = findTabByItem(openTabs.value, item);
 
   if (!existingTab) {
     // 如果不存在，则添加到 openTabs 并设置为当前活动标签
     openTabs.value.push(item);
   }
-  activeTab.value = key;
+  activeTabLabel.value = item.label;
+  console.log(activeTabLabel.value)
 }
 
 // 递归查找子菜单中的项
-function findTabByKey(tabs, key) {
+function findTabByItem(tabs, item) {
   for (let tab of tabs) {
-    if (tab.key === key) {
+    if (tab === item) {
       return tab;
     }
     if (tab.children && tab.children.length > 0) {
-      const found = findTabByKey(tab.children, key);
+      const found = findTabByItem(tab.children, item);
       if (found) {
         return found;
       }
@@ -173,8 +170,8 @@ function findTabByKey(tabs, key) {
 }
 
 // 关闭tab
-function handleTabClose(key) {
-  const index = openTabs.value.findIndex(tab => tab.key === key);
+function handleTabClose(label) {
+  const index = openTabs.value.findIndex(tab => tab.label === label);
 
   if (index !== -1) {
     // 创建一个新数组来触发响应式更新
@@ -182,23 +179,24 @@ function handleTabClose(key) {
     newOpenTabs.splice(index, 1)
     openTabs.value = newOpenTabs
 
-    // 更新 activeTab 为剩余标签中的最后一个
-    if (activeTab.value === key && newOpenTabs.length > 0) {
-      activeTab.value = newOpenTabs[newOpenTabs.length - 1].key
+    // 更新 activeTabLabel 为剩余标签中的最后一个
+    if (activeTabLabel.value === label && newOpenTabs.length > 0) {
+      activeTabLabel.value = newOpenTabs[newOpenTabs.length - 1].label
     }
   }
 }
 
 
 // 根据key切换
-function handleTabChange(key) {
-  activeTab.value = key
+function handleTabChange(label) {
+  console.log(label)
+  activeTabLabel.value = label
 }
 
 // 根据index切换
 function handleTabChangeByIndex(index) {
   // index转为int
-  activeTab.value = openTabs.value[parseInt(index)].key
+  activeTabLabel.value = openTabs.value[parseInt(index)].label
 }
 
 
@@ -231,6 +229,7 @@ body {
 .right-section .n-button {
   margin-left: 10px;
 }
+
 .lightTheme .n-layout-sider {
   background-color: #f0f0f0 !important;
 }

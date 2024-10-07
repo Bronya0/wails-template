@@ -7,4 +7,3 @@ export function renderIcon(icon) {
   return () => h(NIcon, null, {default: () => h(icon)});
 }
 
-

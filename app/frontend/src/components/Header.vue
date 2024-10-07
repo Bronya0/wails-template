@@ -6,19 +6,19 @@
       <n-h5> {{ version.tag_name }}</n-h5>
     </div>
     <div class="right-section">
-      <n-menu mode="horizontal" :value="props.value" :options="props.options" @update:value="handleSelect"/>
+      <n-menu mode="horizontal" :value="props.value" :options="props.options" @update:value="handleMenuSelect"/>
 
       <n-tooltip placement="bottom" trigger="hover">
         <template #trigger>
-          <n-button quaternary :focusable="false" :loading="loading" @click="checkForUpdates"
+          <n-button quaternary :focusable="false" :loading="update_loading" @click="checkForUpdates"
                     :render-icon="renderIcon(RefreshOutline)"/>
         </template>
         <span> 检查版本 {{ version.tag_name }} </span>
       </n-tooltip>
 
-      <n-button text  :focusable="false" @click="minimizeWindow" :render-icon="renderIcon(Remove)"/>
-        <n-button text  :focusable="false" @click="resizeWindow" :render-icon="renderIcon(MaxMinIcon)" />
-      <n-button text  :focusable="false" @click="closeWindow" :render-icon="renderIcon(Close)"
+      <n-button quaternary :focusable="false" @click="minimizeWindow" :render-icon="renderIcon(Remove)"/>
+      <n-button quaternary :focusable="false" @click="resizeWindow" :render-icon="renderIcon(MaxMinIcon)"/>
+      <n-button quaternary :focusable="false" @click="closeWindow" :render-icon="renderIcon(Close)"
                 style="margin-right: 10px;"/>
 
     </div>
@@ -41,10 +41,10 @@ const props = defineProps({
   value: {}
 });
 
-const loading = ref(false)
+const update_loading = ref(false)
 
 
-const emit = defineEmits(['select'])
+const emit = defineEmits([])
 let version = ref({
   tag_name: "",
   body: "",
@@ -52,28 +52,24 @@ let version = ref({
 
 const notification = useNotification()
 
-const handleSelect = (key, item) => {
-  emit('select', key, item)
+const handleMenuSelect = (key, item) => {
+  emit('update:value', key, item)
 }
 
 const checkForUpdates = async () => {
-  loading.value = true
+  update_loading.value = true
   try {
-    console.info("check version……")
     version.value.tag_name = await GetVersion()
-    console.info(version.value.tag_name)
     const resp = await CheckUpdate()
-    console.info(resp)
     if (resp.tag_name !== version.value.tag_name) {
       notification.info({
         title: '发现新版本' + resp.tag_name,
-        content: version.value.body,
+        content: resp.body,
       })
     }
   } finally {
-    loading.value = false
+    update_loading.value = false
   }
-
 }
 
 onMounted(async () => {
