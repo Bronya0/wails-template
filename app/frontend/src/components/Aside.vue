@@ -13,15 +13,9 @@
 
 
 <script setup>
-import {lightTheme, NButton, useMessage, useNotification} from "naive-ui";
-import {renderIcon} from "../utils/common";
-import {LogoGithub, SunnyOutline} from "@vicons/ionicons5";
 
 const props = defineProps(['options', 'value']);
-
 const emit = defineEmits(['update:value'])
-const message = useMessage()
-const notification = useNotification()
 
 const handleMenuSelect = (key, item) => {
   emit('update:value', key, item)

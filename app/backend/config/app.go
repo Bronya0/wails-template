@@ -21,8 +21,6 @@ func (a *AppConfig) Start(ctx context.Context) {
 }
 
 func (a *AppConfig) GetConfig() *types.Config {
-	a.mu.Lock()
-	defer a.mu.Unlock()
 	configPath := a.getConfigPath()
 	defaultConfig := &types.Config{
 		Width:    common.Width,
@@ -58,7 +56,20 @@ func (a *AppConfig) SaveConfig(config *types.Config) string {
 	}
 	return ""
 }
-
+func (a *AppConfig) SaveTheme(theme string) string {
+	config := a.GetConfig()
+	config.Theme = theme
+	data, err := yaml.Marshal(config)
+	if err != nil {
+		return err.Error()
+	}
+	configPath := a.getConfigPath()
+	err = os.WriteFile(configPath, data, 0644)
+	if err != nil {
+		return err.Error()
+	}
+	return ""
+}
 func (a *AppConfig) getConfigPath() string {
 
 	exePath, err := os.Executable()

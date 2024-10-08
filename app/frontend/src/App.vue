@@ -8,7 +8,12 @@
         <n-layout has-sider position="absolute" style="height: 100vh;" :class="headerClass">
 
             <n-layout-header bordered style="height: 42px; bottom: 0; padding: 0;  --wails-draggable:drag">
-              <Header :value="activeTabLabel" :options="menuOptions" @update:value="handleMenuSelect"/>
+              <Header
+                  :value="activeTabLabel"
+                  :options="menuOptions"
+                  @update:value="handleMenuSelect"
+                  @update_theme="themeChange"
+              />
             </n-layout-header>
 
             <n-layout has-sider position="absolute" style="top: 42px; bottom: 0;">
@@ -78,7 +83,7 @@ import {HomeOutline, SettingsOutline,} from '@vicons/ionicons5'
 import Header from './components/Header.vue'
 import Settings from './components/Settings.vue'
 import HelloWorld from './components/HelloWorld.vue'
-import {GetConfig} from "../wailsjs/go/config/AppConfig";
+import {GetConfig, SaveTheme} from "../wailsjs/go/config/AppConfig";
 import {WindowSetSize} from "../wailsjs/runtime";
 import {renderIcon} from "./utils/common";
 import Aside from "./components/Aside.vue";
@@ -208,6 +213,7 @@ function themeChange(newTheme) {
   console.log(newTheme.name)
   Theme.value = newTheme
   headerClass = newTheme === lightTheme ? "lightTheme" : "darkTheme"
+  SaveTheme(newTheme.name)
 }
 
 // // 自定义主题
