@@ -5,15 +5,13 @@
     <n-message-provider>
       <n-notification-provider placement="bottom-right">
 
-        <n-layout has-sider :class="headerClass">
-          <n-layout>
+        <n-layout has-sider position="absolute" style="height: 100vh;" :class="headerClass">
 
-            <n-layout-header bordered style="height: 5dvh; padding: 0;  --wails-draggable:drag">
+            <n-layout-header bordered style="height: 42px; bottom: 0; padding: 0;  --wails-draggable:drag">
               <Header :value="activeTabLabel" :options="menuOptions" @update:value="handleMenuSelect"/>
             </n-layout-header>
 
-
-            <n-layout has-sider style="height: 95dvh;">
+            <n-layout has-sider position="absolute" style="top: 42px; bottom: 0;">
               <n-layout-sider
                   bordered
                   collapsed
@@ -58,7 +56,6 @@
               </n-layout-content>
             </n-layout>
           </n-layout>
-        </n-layout>
       </n-notification-provider>
     </n-message-provider>
   </n-config-provider>
