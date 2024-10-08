@@ -18,7 +18,10 @@ func (obj *Update) Start(ctx context.Context) {
 func (obj *Update) CheckUpdate() *types.Tag {
 	client := resty.New()
 	tag := &types.Tag{}
-	_, _ = client.R().SetResult(tag).Get(common.UPDATE_URL)
+	resp, err := client.R().SetResult(tag).Get(common.UPDATE_URL)
+	if err != nil || resp.StatusCode() != 200 {
+		return nil
+	}
 	tag.TagName = strings.TrimSpace(tag.TagName)
 	return tag
 }

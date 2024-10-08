@@ -16,7 +16,7 @@
           <n-button quaternary :focusable="false" :loading="update_loading" @click="checkForUpdates"
                     :render-icon="renderIcon(PushOutline)"/>
         </template>
-        <span> 检查版本 {{ version.tag_name }} </span>
+        <span> 检查版本：{{ version.tag_name }} {{ check_msg }}</span>
       </n-tooltip>
       <n-button quaternary :focusable="false" @click="minimizeWindow" :render-icon="renderIcon(Remove)"/>
       <n-button quaternary :focusable="false" @click="resizeWindow" :render-icon="renderIcon(MaxMinIcon)"/>
@@ -45,6 +45,7 @@ const props = defineProps(['options', 'value']);
 const emit = defineEmits(['update:value', 'update_theme'])
 const MoonOrSunnyOutline = shallowRef(null)
 const isMaximized = ref(false);
+const check_msg = ref("");
 const MaxMinIcon = shallowRef(SquareOutline)
 
 const update_loading = ref(false)
@@ -67,7 +68,10 @@ const checkForUpdates = async () => {
   try {
     const version = await GetVersion()
     const resp = await CheckUpdate()
-    if (resp && resp.tag_name !== version) {
+    if (!resp) {
+      check_msg.value = "无法连接github，请检查网络"
+    } else if (resp.tag_name !== version) {
+      check_msg.value = '发现新版本' + resp.tag_name
       notification.info({
         title: '发现新版本' + resp.tag_name,
         content: resp.body,
