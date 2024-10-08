@@ -47,7 +47,7 @@ jobs:
           cd ..
           copy readme.md app\build\bin\
           copy LICENSE app\build\bin\
-          "C:\Program Files\7-Zip\7z.exe" a -t7z "${{ env.APP_NAME }}.7z" "app\build\bin\*"
+          & "C:\Program Files\7-Zip\7z.exe" a -t7z "${{ env.APP_NAME }}.7z" "app\build\bin\*"
 
       - name: Upload
         uses: actions/upload-release-asset@v1
