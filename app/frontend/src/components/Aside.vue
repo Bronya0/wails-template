@@ -6,9 +6,6 @@
         :options="props.options"
     />
 
-<!--  <n-flex class="aside-btn">-->
-<!--    <n-button quaternary :render-icon="renderIcon(LogoGithub)"/>-->
-<!--  </n-flex>-->
 </template>
 
 

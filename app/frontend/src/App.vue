@@ -7,7 +7,7 @@
       <n-notification-provider placement="bottom-right">
         <n-layout has-sider position="absolute" style="height: 100vh;" :class="headerClass">
           <!--header-->
-          <n-layout-header bordered style="height: 42px; bottom: 0; padding: 0;  --wails-draggable:drag">
+          <n-layout-header bordered style="height: 42px; bottom: 0; padding: 0; ">
             <Header
                 :value="activeTabLabel"
                 :options="menuOptions"
