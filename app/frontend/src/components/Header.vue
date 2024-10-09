@@ -4,7 +4,7 @@
       <n-avatar :src="logo"/>
     </template>
     <template #extra>
-      <n-flex justify="flex-end" style="--wails-draggable:no-drag">
+      <n-flex justify="flex-end" style="--wails-draggable:no-drag" class="right-section">
         <n-button quaternary :focusable="false" @click="changeTheme" :render-icon="renderIcon(MoonOrSunnyOutline)"/>
         <n-button quaternary @click="openUrl(update_url)"
                   :render-icon="renderIcon(LogoGithub)"/>
@@ -82,18 +82,17 @@ const checkForUpdates = async () => {
                       secondary: true,
                       onClick: () => BrowserOpenURL(update_url),
                     },
-                    "立即下载",
+                    () => "立即下载",
                 ),
                 h(
                     NButton,
                     {
-                      size: 'small',
                       secondary: true,
                       onClick: () => {
                         n.destroy()
                       },
                     },
-                    "取消",
+                    () => "取消",
                 ),
             ]),
         onPositiveClick: () => BrowserOpenURL(update_url),
@@ -144,4 +143,7 @@ const changeTheme = () => {
 <style scoped>
 
 
+.right-section .n-button {
+  padding: 0 6px;
+}
 </style>

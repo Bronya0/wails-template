@@ -240,15 +240,12 @@ body {
   padding: 8px 24px;
 }
 
-.lightTheme .n-layout-header {
-  background-color: #f2f2f7;
+.lightTheme .n-layout-header, .lightTheme .n-layout-sider {
+  background-color: #F0F3F6 !important;
+}
+.lightTheme .n-tabs .n-tabs-nav {
+  --n-tab-color: #F0F3F6;
 }
 
-.right-section .n-button {
-  margin-left: 10px;
-}
 
-.lightTheme .n-layout-sider {
-  background-color: #f2f2f7 !important;
-}
 </style>
