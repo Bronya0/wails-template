@@ -43,7 +43,7 @@ import {GetConfig, SaveTheme} from "../../wailsjs/go/config/AppConfig";
 
 const props = defineProps(['options', 'value']);
 const emit = defineEmits(['update:value', 'update_theme'])
-const MoonOrSunnyOutline = shallowRef(null)
+const MoonOrSunnyOutline = shallowRef(SunnyOutline)
 const isMaximized = ref(false);
 const check_msg = ref("");
 const MaxMinIcon = shallowRef(SquareOutline)

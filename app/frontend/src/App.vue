@@ -2,65 +2,64 @@
   <n-config-provider
       :theme="Theme"
   >
+    <!--https://www.naiveui.com/zh-CN/os-theme/components/layout-->
     <n-message-provider>
       <n-notification-provider placement="bottom-right">
-
         <n-layout has-sider position="absolute" style="height: 100vh;" :class="headerClass">
-
-            <n-layout-header bordered style="height: 42px; bottom: 0; padding: 0;  --wails-draggable:drag">
-              <Header
-                  :value="activeTabLabel"
-                  :options="menuOptions"
-                  @update:value="handleMenuSelect"
-                  @update_theme="themeChange"
-              />
-            </n-layout-header>
-
-            <n-layout has-sider position="absolute" style="top: 42px; bottom: 0;">
-              <n-layout-sider
-                  bordered
-                  collapsed
-                  collapse-mode="width"
-              >
+          <!--header-->
+          <n-layout-header bordered style="height: 42px; bottom: 0; padding: 0;  --wails-draggable:drag">
+            <Header
+                :value="activeTabLabel"
+                :options="menuOptions"
+                @update:value="handleMenuSelect"
+                @update_theme="themeChange"
+            />
+          </n-layout-header>
+          <!--side + content-->
+          <n-layout has-sider position="absolute" style="top: 42px; bottom: 0;">
+            <n-layout-sider
+                bordered
+                collapsed
+                collapse-mode="width"
+            >
               <Aside
                   :value="activeTabLabel"
                   @update:value="handleMenuSelect"
                   :options="sideMenuOptions"
               />
 
-              </n-layout-sider>
+            </n-layout-sider>
+            <n-layout-content>
+              <n-tabs
+                  type="card"
+                  animated
+                  size="small"
+                  :value="activeTabLabel"
+                  @update:value="handleTabChange"
+                  @close="handleTabClose"
+              >
 
-              <n-layout-content>
-                <n-tabs
-                    type="card"
-                    animated
-                    size="small"
-                    :value="activeTabLabel"
-                    @update:value="handleTabChange"
-                    @close="handleTabClose"
-                >
+                <n-tab-pane v-for="tab in openTabs" :key="tab.key" :name="tab.label" display-directive="show"
+                            :closable="openTabs.length > 1">
+                  <template #tab v-if="tab.tab_icon">
+                    <n-flex align="center">
+                      <n-icon :component="tab.tab_icon"/>
+                      {{ tab.label }}
+                    </n-flex>
+                  </template>
 
-                  <n-tab-pane v-for="tab in openTabs" :key="tab.key" :name="tab.label" display-directive="show"
-                              :closable="openTabs.length > 1">
-                    <!--                  <template #tab>-->
-                    <!--                    <n-flex align="center">-->
-                    <!--                      <n-icon :component="tab.tab_icon"/>-->
-                    <!--                      {{ tab.label }}-->
-                    <!--                    </n-flex>-->
-                    <!--                  </template>-->
+                  <div class="tab-content">
+                    <component :is="tab.component" :name="tab.label" :key="tab.key"
+                               @update_theme="themeChange"
+                               @selectTab="handleTabChangeByIndex"
+                    />
+                  </div>
+                </n-tab-pane>
+              </n-tabs>
 
-                    <div class="tab-content">
-                      <component :is="tab.component" :name="tab.label" :key="tab.key"
-                                 @update_theme="themeChange"
-                                 @selectTab="handleTabChangeByIndex"
-                      />
-                    </div>
-                  </n-tab-pane>
-                </n-tabs>
-
-              </n-layout-content>
-            </n-layout>
+            </n-layout-content>
           </n-layout>
+        </n-layout>
       </n-notification-provider>
     </n-message-provider>
   </n-config-provider>
@@ -110,12 +109,14 @@ const sideMenuOptions = [
     label: '主页',
     key: '主页',
     icon: renderIcon(HomeOutline),
+    tab_icon: HomeOutline,
     component: HelloWorld,
     children: [
       {
         label: 'topic1',
         key: 'topic1',
         component: HelloWorld
+
       },
       {
         label: 'topic2',
@@ -133,6 +134,7 @@ const sideMenuOptions = [
     label: '设置',
     key: '设置',
     icon: renderIcon(SettingsOutline),
+    tab_icon: SettingsOutline,
     component: Settings
   },
 
@@ -216,15 +218,16 @@ function themeChange(newTheme) {
   SaveTheme(newTheme.name)
 }
 
-// // 自定义主题
+// 自定义主题
 // /**
 //  * @type import('naive-ui').GlobalThemeOverrides
 //  */
 // const themeOverrides = {
-//   Button: {
-//     color: '#f2f2f7'
+//   common: {
+//     bodyColor: '#FDFCFF'
 //   }
 // }
+
 </script>
 
 <style>
