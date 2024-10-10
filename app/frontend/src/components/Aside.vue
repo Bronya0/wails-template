@@ -4,6 +4,7 @@
         :value="props.value"
         @update:value="handleMenuSelect"
         :options="props.options"
+        style="--wails-draggable:no-drag"
     />
 
 </template>

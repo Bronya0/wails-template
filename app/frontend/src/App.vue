@@ -22,6 +22,7 @@
                 collapsed
                 collapse-mode="width"
                 collapsed-width="60"
+                style="--wails-draggable:drag"
             >
               <Aside
                   collapsed-width="60"
