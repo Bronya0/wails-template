@@ -144,6 +144,6 @@ const changeTheme = () => {
 
 
 .right-section .n-button {
-  padding: 0 10px;
+  padding: 0 8px;
 }
 </style>

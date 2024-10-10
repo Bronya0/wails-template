@@ -7,7 +7,7 @@
       <n-notification-provider placement="bottom-right">
         <n-layout has-sider position="absolute" style="height: 100vh;" :class="headerClass">
           <!--header-->
-          <n-layout-header bordered style="height: 42px; bottom: 0; padding: 0; ">
+          <n-layout-header style="height: 42px; bottom: 0; padding: 0; ">
             <Header
                 :value="activeTabLabel"
                 :options="menuOptions"
@@ -21,8 +21,10 @@
                 bordered
                 collapsed
                 collapse-mode="width"
+                collapsed-width="60"
             >
               <Aside
+                  collapsed-width="60"
                   :value="activeTabLabel"
                   @update:value="handleMenuSelect"
                   :options="sideMenuOptions"
@@ -234,17 +236,11 @@ function themeChange(newTheme) {
 body {
   margin: 0;
   font-family: sans-serif;
+
 }
 
 .tab-content {
   padding: 8px 24px;
-}
-
-.lightTheme .n-layout-header, .lightTheme .n-layout-sider {
-  background-color: #F0F3F6 !important;
-}
-.lightTheme .n-tabs .n-tabs-nav {
-  --n-tab-color: #F0F3F6;
 }
 
 
