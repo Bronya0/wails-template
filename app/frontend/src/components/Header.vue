@@ -1,7 +1,10 @@
 <template>
-  <n-page-header :subtitle="subtitle" title="测试APP" style="padding: 4px;--wails-draggable:drag">
+  <n-page-header :subtitle="subtitle" style="padding: 4px;--wails-draggable:drag">
     <template #avatar>
       <n-avatar :src="logo"/>
+    </template>
+    <template #title>
+      <div style="font-weight: 800">Demo App</div>
     </template>
     <template #extra>
       <n-flex justify="flex-end" style="--wails-draggable:no-drag" class="right-section">

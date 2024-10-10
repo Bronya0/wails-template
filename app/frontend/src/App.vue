@@ -7,7 +7,7 @@
       <n-notification-provider placement="bottom-right">
         <n-layout has-sider position="absolute" style="height: 100vh;" :class="headerClass">
           <!--header-->
-          <n-layout-header style="height: 42px; bottom: 0; padding: 0; ">
+          <n-layout-header bordered style="height: 42px; bottom: 0; padding: 0; ">
             <Header
                 :value="activeTabLabel"
                 :options="menuOptions"
@@ -243,5 +243,11 @@ body {
   padding: 8px 24px;
 }
 
+.lightTheme .n-layout-header {
+  background-color: #f7f7fa;
+}
 
+.lightTheme .n-layout-sider {
+  background-color: #f7f7fa !important;
+}
 </style>
