@@ -41,9 +41,10 @@ import {GetVersion} from '../../wailsjs/go/main/App'
 import {useNotification} from 'naive-ui'
 import {openUrl, renderIcon} from "../utils/common";
 import {GetConfig, SaveTheme} from "../../wailsjs/go/config/AppConfig";
+import emitter from "../utils/eventBus";
 
 defineProps(['options', 'value']);
-const emit = defineEmits(['update:value', 'update_theme'])
+
 const MoonOrSunnyOutline = shallowRef(SunnyOutline)
 const isMaximized = ref(false);
 const check_msg = ref("");
@@ -139,7 +140,7 @@ const closeWindow = () => {
 const changeTheme = () => {
   MoonOrSunnyOutline.value = MoonOrSunnyOutline.value === Moon ? SunnyOutline : Moon;
   theme = MoonOrSunnyOutline.value === Moon ? darkTheme : lightTheme
-  emit('update_theme', theme)
+  emitter.emit('update_theme', theme)
 }
 </script>
 

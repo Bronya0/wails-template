@@ -1,4 +1,5 @@
 <template>
+<!--  https://www.naiveui.com/zh-CN/os-theme/components/menu-->
     <n-menu
         :mode="'vertical'"
         :value="props.value"

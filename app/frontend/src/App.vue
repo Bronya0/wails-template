@@ -9,7 +9,7 @@
           <!--header-->
           <n-layout-header bordered style="height: 42px; bottom: 0; padding: 0; ">
             <Header
-                :value="activeTabLabel"
+                :value="activeItem.label"
                 :options="menuOptions"
                 @update:value="handleMenuSelect"
                 @update_theme="themeChange"
@@ -21,44 +21,21 @@
                 bordered
                 collapsed
                 collapse-mode="width"
-                collapsed-width="60"
+                :collapsed-width="60"
                 style="--wails-draggable:drag"
             >
               <Aside
-                  collapsed-width="60"
-                  :value="activeTabLabel"
+                  :collapsed-width="60"
+                  :value="activeItem.label"
                   @update:value="handleMenuSelect"
                   :options="sideMenuOptions"
               />
 
             </n-layout-sider>
-            <n-layout-content>
-              <n-tabs
-                  type="card"
-                  animated
-                  size="small"
-                  :value="activeTabLabel"
-                  @update:value="handleTabChange"
-                  @close="handleTabClose"
-              >
-
-                <n-tab-pane v-for="tab in openTabs" :key="tab.key" :name="tab.label" display-directive="show"
-                            :closable="openTabs.length > 1">
-                  <template #tab v-if="tab.tab_icon">
-                    <n-flex align="center">
-                      <n-icon :component="tab.tab_icon"/>
-                      {{ tab.label }}
-                    </n-flex>
-                  </template>
-
-                  <div class="tab-content">
-                    <component :is="tab.component" :name="tab.label" :key="tab.key"
-                               @update_theme="themeChange"
-                               @selectTab="handleTabChangeByIndex"
-                    />
-                  </div>
-                </n-tab-pane>
-              </n-tabs>
+            <n-layout-content style="padding: 16px;">
+              <keep-alive>
+                <component :is="activeItem.component"></component>
+              </keep-alive>
 
             </n-layout-content>
           </n-layout>
@@ -89,6 +66,7 @@ import {GetConfig, SaveTheme} from "../wailsjs/go/config/AppConfig";
 import {WindowSetSize} from "../wailsjs/runtime";
 import {renderIcon} from "./utils/common";
 import Aside from "./components/Aside.vue";
+import emitter from "./utils/eventBus";
 
 let headerClass = shallowRef('lightTheme')
 
@@ -105,6 +83,8 @@ onMounted(async () => {
       headerClass = "darkTheme"
     }
   }
+
+  emitter.on('update_theme', themeChange)
 })
 // 左侧菜单
 const sideMenuOptions = [
@@ -148,68 +128,12 @@ const sideMenuOptions = [
 const menuOptions = []
 
 
-const openTabs = shallowRef([sideMenuOptions[0].children[0]])
-const activeTabLabel = ref(sideMenuOptions[0].children[0].label)
+const activeItem = shallowRef(sideMenuOptions[0].children[0])
 
 // 切换菜单
-// item是从Header里handleSelect emits传过来的菜单对象
 function handleMenuSelect(key, item) {
-  // 检查 item 是否已存在于 openTabs 中
-  const existingTab = findTabByItem(openTabs.value, item);
-
-  if (!existingTab) {
-    // 如果不存在，则添加到 openTabs 并设置为当前活动标签
-    openTabs.value.push(item);
-  }
-  activeTabLabel.value = item.label;
-  console.log(activeTabLabel.value)
+  activeItem.value = item;
 }
-
-// 递归查找子菜单中的项
-function findTabByItem(tabs, item) {
-  for (let tab of tabs) {
-    if (tab === item) {
-      return tab;
-    }
-    if (tab.children && tab.children.length > 0) {
-      const found = findTabByItem(tab.children, item);
-      if (found) {
-        return found;
-      }
-    }
-  }
-  return null;
-}
-
-// 关闭tab
-function handleTabClose(label) {
-  const index = openTabs.value.findIndex(tab => tab.label === label);
-
-  if (index !== -1) {
-    // 创建一个新数组来触发响应式更新
-    const newOpenTabs = [...openTabs.value]
-    newOpenTabs.splice(index, 1)
-    openTabs.value = newOpenTabs
-
-    // 更新 activeTabLabel 为剩余标签中的最后一个
-    if (activeTabLabel.value === label && newOpenTabs.length > 0) {
-      activeTabLabel.value = newOpenTabs[newOpenTabs.length - 1].label
-    }
-  }
-}
-
-// 根据key切换
-function handleTabChange(label) {
-  console.log(label)
-  activeTabLabel.value = label
-}
-
-// 根据index切换
-function handleTabChangeByIndex(index) {
-  // index转为int
-  activeTabLabel.value = openTabs.value[parseInt(index)].label
-}
-
 
 let Theme = shallowRef(lightTheme)
 
@@ -238,10 +162,6 @@ body {
   margin: 0;
   font-family: sans-serif;
 
-}
-
-.tab-content {
-  padding: 8px 24px;
 }
 
 .lightTheme .n-layout-header {

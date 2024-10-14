@@ -44,9 +44,9 @@ import {GetConfig, SaveConfig} from '../../wailsjs/go/config/AppConfig'
 import {WindowSetSize} from "../../wailsjs/runtime";
 import {renderIcon} from "../utils/common";
 import {Moon, SunnyOutline} from "@vicons/ionicons5";
+import emitter from "../utils/eventBus";
 
 const message = useMessage()
-const emit = defineEmits(['update_theme'])
 let theme = lightTheme
 const config = ref({
   width: 1248,
@@ -81,7 +81,7 @@ const saveConfig = async () => {
 
   await WindowSetSize(config.value.width, config.value.height)
 
-  emit('update_theme', theme)
+  emitter.emit('update_theme', theme)
   // 可以添加保存成功的提示
   message.success("保存成功")
   config.value = await GetConfig()

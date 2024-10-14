@@ -5,17 +5,17 @@
     <div class="input-box">
       <n-input v-model:value="data.name" type="text" placeholder="input name" class="input"/>
       <n-button type="info" @click="greet"> Greet </n-button>
-      <n-button type="info" @click="$emit('selectTab', data.name)"> Select </n-button>
+<!--      <n-button type="info" @click="emitter.emit('selectTab', data.name)"> Select </n-button>-->
     </div>
   </main>
 </template>
 
 
 <script setup>
-import {onActivated, onBeforeUnmount, onMounted, reactive} from 'vue'
+import {onMounted, reactive} from 'vue'
 import {Greet} from '../../wailsjs/go/main/App'
 import { useMessage } from 'naive-ui'
-import {onDeactivated} from "@vue/runtime-core";
+import emitter from "../utils/eventBus";
 
 const message = useMessage()
 
@@ -36,16 +36,6 @@ onMounted(() => {
   console.info("初始化HelloWorld……")
 })
 
-onBeforeUnmount(() => {
-  console.info("卸载HelloWorld……")
-})
-
-onActivated(() => {
-  console.info("激活HelloWorld组件……")
-})
-onDeactivated(() => {
-  console.info("失活HelloWorld组件……")
-})
 
 </script>
 
