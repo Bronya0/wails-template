@@ -129,7 +129,7 @@ jobs:
       - name: Build & Compress
         run: |
           go install github.com/wailsapp/wails/v2/cmd/wails@latest
-          sudo apt-get update && sudo apt-get install libgtk-3-0 gcc-aarch64-linux-gnu
+          sudo apt-get update && sudo apt-get install libgtk-3-0 libwebkit2gtk-4.0-dev gcc-aarch64-linux-gnu
           cd ${{ env.APP_WORKING_DIRECTORY }}
           wails build -ldflags="-X 'app/backend/common.Version=${{ github.ref_name }}'" --platform ${{ matrix.build.platform }} -webview2 download -o ${{ env.APP_NAME }}
           cd ..
