@@ -1,7 +1,6 @@
 package main
 
 import (
-	"app/backend/common"
 	"context"
 	"fmt"
 )
@@ -42,9 +41,4 @@ func (a *App) shutdown(ctx context.Context) {
 // Greet returns a greeting for the given name
 func (a *App) Greet(name string) string {
 	return fmt.Sprintf("Hello %s, It's show time!", name)
-}
-
-// GetVersion returns the application version
-func (a *App) GetVersion() string {
-	return common.Version
 }

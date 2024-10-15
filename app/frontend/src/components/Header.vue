@@ -4,7 +4,7 @@
       <n-avatar :src="logo"/>
     </template>
     <template #title>
-      <div style="font-weight: 800">Demo App</div>
+      <div style="font-weight: 800">{{app_name}}</div>
     </template>
     <template #extra>
       <n-flex justify="flex-end" style="--wails-draggable:no-drag" class="right-section">
@@ -37,10 +37,9 @@ import logo from '../assets/images/logo.svg'
 import {h, onMounted, ref, shallowRef} from "vue";
 import {BrowserOpenURL, Quit, WindowMaximise, WindowMinimise, WindowUnmaximise} from "../../wailsjs/runtime";
 import {CheckUpdate} from '../../wailsjs/go/system/Update'
-import {GetVersion} from '../../wailsjs/go/main/App'
 import {useNotification} from 'naive-ui'
 import {openUrl, renderIcon} from "../utils/common";
-import {GetConfig, SaveTheme} from "../../wailsjs/go/config/AppConfig";
+import {GetConfig, SaveTheme, GetVersion, GetAppName} from "../../wailsjs/go/config/AppConfig";
 import emitter from "../utils/eventBus";
 
 defineProps(['options', 'value']);
@@ -48,6 +47,7 @@ defineProps(['options', 'value']);
 const MoonOrSunnyOutline = shallowRef(SunnyOutline)
 const isMaximized = ref(false);
 const check_msg = ref("");
+const app_name = ref("");
 const MaxMinIcon = shallowRef(SquareOutline)
 const update_url = "https://github.com/Bronya0/wails-template/releases"
 const update_loading = ref(false)
@@ -68,6 +68,7 @@ const checkForUpdates = async () => {
   update_loading.value = true
   try {
     const v = await GetVersion()
+    app_name.value = await GetAppName()
     const resp = await CheckUpdate()
     if (!resp) {
       check_msg.value = "无法连接github，请检查网络"

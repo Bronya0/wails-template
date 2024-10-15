@@ -80,3 +80,12 @@ func (a *AppConfig) getConfigPath() string {
 	return filepath.Join(res, common.ConfigPath)
 
 }
+
+// GetVersion returns the application version
+func (a *AppConfig) GetVersion() string {
+	return common.Version
+}
+
+func (a *AppConfig) GetAppName() string {
+	return common.AppName
+}
