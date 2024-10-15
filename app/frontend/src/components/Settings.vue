@@ -1,5 +1,6 @@
 <template>
   <div>
+    <h2 style="width: 42px;">设置</h2>
     <n-form :model="config" label-placement="left">
       <n-form-item label="窗口宽度">
         <n-input-number v-model:value="config.width" :min="800" :max="1920" :style="{ maxWidth: '120px' }"/>

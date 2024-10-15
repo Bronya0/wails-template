@@ -32,7 +32,7 @@
               />
 
             </n-layout-sider>
-            <n-layout-content style="padding: 16px;">
+            <n-layout-content style="padding: 0 16px;">
               <keep-alive>
                 <component :is="activeItem.component"></component>
               </keep-alive>
