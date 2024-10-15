@@ -14,8 +14,8 @@
 
       <n-form-item label="主题">
         <n-flex>
-          <n-button @click="theme=lightTheme" :render-icon="renderIcon(SunnyOutline)"/>
-          <n-button @click="theme=darkTheme" :render-icon="renderIcon(Moon)"/>
+          <n-button @click="theme=lightTheme" :render-icon="renderIcon(WbSunnyOutlined)"/>
+          <n-button @click="theme=darkTheme" :render-icon="renderIcon(NightlightRoundFilled)"/>
         </n-flex>
       </n-form-item>
 
@@ -44,7 +44,7 @@ import {
 import {GetConfig, SaveConfig} from '../../wailsjs/go/config/AppConfig'
 import {WindowSetSize} from "../../wailsjs/runtime";
 import {renderIcon} from "../utils/common";
-import {Moon, SunnyOutline} from "@vicons/ionicons5";
+import {WbSunnyOutlined, NightlightRoundFilled} from '@vicons/material'
 import emitter from "../utils/eventBus";
 
 const message = useMessage()

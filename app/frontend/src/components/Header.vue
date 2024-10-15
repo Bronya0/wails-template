@@ -10,19 +10,19 @@
       <n-flex justify="flex-end" style="--wails-draggable:no-drag" class="right-section">
         <n-button quaternary :focusable="false" @click="changeTheme" :render-icon="renderIcon(MoonOrSunnyOutline)"/>
         <n-button quaternary @click="openUrl(update_url)"
-                  :render-icon="renderIcon(LogoGithub)"/>
+                  :render-icon="renderIcon(CodeFilled)"/>
         <n-tooltip placement="bottom" trigger="hover">
           <template #trigger>
             <n-button quaternary :focusable="false" :loading="update_loading" @click="checkForUpdates"
-                      :render-icon="renderIcon(PushOutline)"/>
+                      :render-icon="renderIcon(SystemUpdateAltSharp)"/>
           </template>
           <span> 检查版本：{{ version.tag_name }} {{ check_msg }}</span>
         </n-tooltip>
-        <n-button quaternary :focusable="false" @click="minimizeWindow" :render-icon="renderIcon(Remove)"/>
+        <n-button quaternary :focusable="false" @click="minimizeWindow" :render-icon="renderIcon(RemoveOutlined)"/>
         <n-button quaternary :focusable="false" @click="resizeWindow" :render-icon="renderIcon(MaxMinIcon)"/>
         <n-button quaternary style="font-size: 22px" :focusable="false" @click="closeWindow">
           <n-icon>
-            <Close/>
+            <CloseFilled/>
           </n-icon>
         </n-button>
       </n-flex>
@@ -32,23 +32,31 @@
 
 <script setup>
 import {darkTheme, lightTheme, NAvatar, NButton,  NFlex, useMessage} from 'naive-ui'
-import {PushOutline, SquareOutline, CopyOutline, Close, Remove, LogoGithub, Moon, SunnyOutline} from '@vicons/ionicons5'
+import {
+  CodeFilled,
+  SystemUpdateAltSharp,
+  RemoveOutlined,
+  CloseFilled,
+  CropSquareFilled,
+  WbSunnyOutlined,
+  NightlightRoundFilled, ContentCopyFilled
+} from '@vicons/material'
 import logo from '../assets/images/logo.svg'
 import {h, onMounted, ref, shallowRef} from "vue";
 import {BrowserOpenURL, Quit, WindowMaximise, WindowMinimise, WindowUnmaximise} from "../../wailsjs/runtime";
 import {CheckUpdate} from '../../wailsjs/go/system/Update'
 import {useNotification} from 'naive-ui'
 import {openUrl, renderIcon} from "../utils/common";
-import {GetConfig, SaveTheme, GetVersion, GetAppName} from "../../wailsjs/go/config/AppConfig";
+import {GetConfig, GetVersion, GetAppName} from "../../wailsjs/go/config/AppConfig";
 import emitter from "../utils/eventBus";
 
 defineProps(['options', 'value']);
 
-const MoonOrSunnyOutline = shallowRef(SunnyOutline)
+const MoonOrSunnyOutline = shallowRef(WbSunnyOutlined)
 const isMaximized = ref(false);
 const check_msg = ref("");
 const app_name = ref("");
-const MaxMinIcon = shallowRef(SquareOutline)
+const MaxMinIcon = shallowRef(CropSquareFilled)
 const update_url = "https://github.com/Bronya0/wails-template/releases"
 const update_loading = ref(false)
 let theme = lightTheme
@@ -111,7 +119,7 @@ onMounted(async () => {
   app_name.value = await GetAppName()
 
   const config = await GetConfig()
-  MoonOrSunnyOutline.value = config.theme === lightTheme.name ? SunnyOutline : Moon
+  MoonOrSunnyOutline.value = config.theme === lightTheme.name ? WbSunnyOutlined : NightlightRoundFilled
   const v = await GetVersion()
   version.value.tag_name = v
   subtitle.value = desc + v
@@ -127,10 +135,10 @@ const resizeWindow = () => {
   isMaximized.value = !isMaximized.value;
   if (isMaximized.value) {
     WindowMaximise();
-    MaxMinIcon.value = CopyOutline;
+    MaxMinIcon.value = ContentCopyFilled;
   } else {
     WindowUnmaximise();
-    MaxMinIcon.value = SquareOutline;
+    MaxMinIcon.value = CropSquareFilled;
   }
   console.log(isMaximized.value)
 
@@ -140,8 +148,8 @@ const closeWindow = () => {
   Quit()
 }
 const changeTheme = () => {
-  MoonOrSunnyOutline.value = MoonOrSunnyOutline.value === Moon ? SunnyOutline : Moon;
-  theme = MoonOrSunnyOutline.value === Moon ? darkTheme : lightTheme
+  MoonOrSunnyOutline.value = MoonOrSunnyOutline.value === NightlightRoundFilled ? WbSunnyOutlined : NightlightRoundFilled;
+  theme = MoonOrSunnyOutline.value === NightlightRoundFilled ? darkTheme : lightTheme
   emitter.emit('update_theme', theme)
 }
 </script>

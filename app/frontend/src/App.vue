@@ -58,7 +58,7 @@ import {
   NTabPane,
   NTabs
 } from 'naive-ui'
-import {HomeOutline, SettingsOutline,} from '@vicons/ionicons5'
+import {SettingsOutlined, HiveOutlined} from '@vicons/material'
 import Header from './components/Header.vue'
 import Settings from './components/Settings.vue'
 import HelloWorld from './components/HelloWorld.vue'
@@ -87,37 +87,18 @@ onMounted(async () => {
   emitter.on('update_theme', themeChange)
 })
 // 左侧菜单
+// 左侧菜单
 const sideMenuOptions = [
   {
-    label: '主页',
-    key: '主页',
-    icon: renderIcon(HomeOutline),
-    tab_icon: HomeOutline,
+    label: '集群',
+    key: '集群',
+    icon: renderIcon(HiveOutlined),
     component: HelloWorld,
-    children: [
-      {
-        label: 'topic1',
-        key: 'topic1',
-        component: HelloWorld
-
-      },
-      {
-        label: 'topic2',
-        key: 'topic2',
-        component: HelloWorld
-      },
-      {
-        label: 'topic3',
-        key: 'topic3',
-        component: HelloWorld
-      },
-    ]
   },
   {
     label: '设置',
     key: '设置',
-    icon: renderIcon(SettingsOutline),
-    tab_icon: SettingsOutline,
+    icon: renderIcon(SettingsOutlined),
     component: Settings
   },
 
@@ -128,7 +109,7 @@ const sideMenuOptions = [
 const menuOptions = []
 
 
-const activeItem = shallowRef(sideMenuOptions[0].children[0])
+const activeItem = shallowRef(sideMenuOptions[0])
 
 // 切换菜单
 function handleMenuSelect(key, item) {
