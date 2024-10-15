@@ -68,7 +68,6 @@ const checkForUpdates = async () => {
   update_loading.value = true
   try {
     const v = await GetVersion()
-    app_name.value = await GetAppName()
     const resp = await CheckUpdate()
     if (!resp) {
       check_msg.value = "无法连接github，请检查网络"
@@ -109,6 +108,8 @@ const checkForUpdates = async () => {
 }
 
 onMounted(async () => {
+  app_name.value = await GetAppName()
+
   const config = await GetConfig()
   MoonOrSunnyOutline.value = config.theme === lightTheme.name ? SunnyOutline : Moon
   const v = await GetVersion()
