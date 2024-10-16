@@ -1,5 +1,7 @@
 <template>
-
+  <n-flex vertical>
+    <h2 style="width: 42px;">hello</h2>
+  </n-flex>
   <main>
     <div class="result">{{ data.resultText }}</div>
     <div class="input-box">
