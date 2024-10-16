@@ -5,6 +5,7 @@
     <!--https://www.naiveui.com/zh-CN/os-theme/components/layout-->
     <n-message-provider>
       <n-notification-provider placement="bottom-right">
+        <n-loading-bar-provider>
         <n-layout has-sider position="absolute" style="height: 100vh;" :class="headerClass">
           <!--header-->
           <n-layout-header bordered style="height: 42px; bottom: 0; padding: 0; ">
@@ -43,6 +44,7 @@
             </n-layout-content>
           </n-layout>
         </n-layout>
+        </n-loading-bar-provider>
       </n-notification-provider>
     </n-message-provider>
   </n-config-provider>
