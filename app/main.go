@@ -76,6 +76,7 @@ func main() {
 			WebviewIsTransparent:              false,
 			WindowIsTranslucent:               false,
 			DisableFramelessWindowDecorations: false,
+			ResizeDebounceMS:                  2,
 		},
 		Linux: &linux.Options{
 			ProgramName:         common.AppName,
