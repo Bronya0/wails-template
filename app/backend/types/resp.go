@@ -1,5 +1,7 @@
 package types
 
+type H map[string]interface{}
+
 type Tag struct {
 	TagName string `json:"tag_name"`
 	Body    string `json:"body"`
