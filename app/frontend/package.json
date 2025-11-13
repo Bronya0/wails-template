@@ -1,0 +1,28 @@
+{
+  "name": "app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "echarts": "^5.5.1",
+    "mitt": "^3.0.1",
+    "vue": "^3.5.13",
+    "vue-i18n": "^9.14.2",
+    "vue-router": "^4.5.1",
+    "naive-ui": "^2.42.0",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "@wailsio/runtime": "latest",
+    "ace-builds": "1.4.12",
+    "vite": "^6.2.6",
+    "vite-svg-loader": "^5.1.0"
+  },
+  "devDependencies": {
+  },
+  "keywords": [],
+  "author": ""
+}

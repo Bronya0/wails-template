@@ -1,0 +1,154 @@
+name: Wails build
+
+on:
+  release:
+    types: [ created ]
+
+env:
+  NODE_OPTIONS: "--max-old-space-size=4096"
+  APP_NAME: 'PetaPeta'
+  APP_WORKING_DIRECTORY: 'app'
+  GO_VERSION: '1.24'
+  NODE_VERSION: "22.x"
+
+jobs:
+  build-windows:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ windows-latest ]  # amd64/x64
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: GoLang
+        uses: actions/setup-go@v4
+        with:
+          check-latest: true
+          go-version: ${{ env.GO_VERSION }}
+
+      - name: NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Build & Compress
+        shell: powershell
+        run: |
+          go install -v github.com/wailsapp/wails/v3/cmd/wails3@latest
+          choco install 7zip
+          cd ${{ env.APP_WORKING_DIRECTORY }}
+          wails3 package
+          cd ..
+          copy readme.md app\bin
+          copy LICENSE app\bin\
+          & "C:\Program Files\7-Zip\7z.exe" a -t7z "${{ env.APP_NAME }}-${{ github.ref_name }}-windows-x64.7z" ".\app\bin\*" -r
+
+      - name: Upload Release Asset
+        uses: softprops/action-gh-release@v1
+        with:
+          files: "*.7z"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build-macos:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ macos-latest ]  # macos-13是amd64，macos-latest是m1芯片
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: GoLang
+        uses: actions/setup-go@v4
+        with:
+          check-latest: true
+          go-version: ${{ env.GO_VERSION }}
+
+      - name: NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Build
+        shell: bash
+        run: |
+          go install -v github.com/wailsapp/wails/v3/cmd/wails3@latest
+          cd ${{ env.APP_WORKING_DIRECTORY }}
+          wails3 package
+          mkdir -p _build/
+          cp -r bin/${{ env.APP_NAME }}.app _build/
+          brew install create-dmg
+          create-dmg \
+            --no-internet-enable \
+            --volname "${{ env.APP_NAME }}" \
+            --volicon "_build/${{ env.APP_NAME }}.app/Contents/Resources/icons.icns" \
+            --icon "${{ env.APP_NAME }}.app" 180 180 \
+            --icon-size 100 \
+            --hide-extension "${{ env.APP_NAME }}.app" \
+            "${{ env.APP_NAME }}-${{ github.ref_name }}-macos.dmg" \
+            "_build/"
+
+      - name: Upload Release Assets
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ${{ env.APP_WORKING_DIRECTORY }}/*.dmg
+          fail_on_unmatched_files: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+#
+#  build-linux:
+#    runs-on: ${{ matrix.os }}
+#    strategy:
+#      matrix:
+#        os: [ubuntu-22.04]
+#
+#    steps:
+#      - name: Checkout
+#        uses: actions/checkout@v2
+#        with:
+#          submodules: recursive
+#
+#      - name: GoLang
+#        uses: actions/setup-go@v4
+#        with:
+#          check-latest: true
+#          go-version: ${{ env.GO_VERSION }}
+#
+#      - name: NodeJS
+#        uses: actions/setup-node@v3
+#        with:
+#          node-version: ${{ env.NODE_VERSION }}
+#
+#      - name: Build & Compress
+#        shell: bash
+#        run: |
+#          ARCH=$(uname -m)
+#          sudo apt-get update && sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.1-dev build-essential
+#          go install -v github.com/wailsapp/wails/v3/cmd/wails3@latest
+#          cd ${{ env.APP_WORKING_DIRECTORY }}
+#          wails3 package
+#          cd ..
+#          mkdir _temp_dist
+#          cp readme.md LICENSE _temp_dist/
+#          cp -r ${{ env.APP_WORKING_DIRECTORY }}/bin/* _temp_dist/
+#          chmod +x _temp_dist/*
+#          cd _temp_dist/
+#          tar -zcvf ${{ env.APP_NAME }}-${{ github.ref_name }}-ubuntu-$ARCH.tar.gz *
+#          mv ${{ env.APP_NAME }}-${{ github.ref_name }}-ubuntu-$ARCH.tar.gz ..
+#
+#      - name: Upload Release Assets
+#        uses: softprops/action-gh-release@v1
+#        with:
+#          files: "*.tar.gz"
+#          fail_on_unmatched_files: true
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
